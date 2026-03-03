@@ -152,10 +152,10 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 								lerp(top_note[2], end_note[2], i2 / (test_count - 1.0)),
 							])
 
-				var notes_to_check: Array[Array] = preprocessed_data.slice(i - stack_length - 6, i + 7)
+				var notes_to_check: Array[Array] = preprocessed_data.slice(i - stack_length - 2, i + 2)
 
-				var cursor_position_notes: Array[Array] = secondary_preprocessed_data.slice(-stack_length - 9)
-				var cursor_position_notes_end: Array[Array] = preprocessed_data.slice(i, i + 10)
+				var cursor_position_notes: Array[Array] = secondary_preprocessed_data.slice(-stack_length - 4)
+				var cursor_position_notes_end: Array[Array] = preprocessed_data.slice(i, i + 5)
 
 
 				for test: Array in tests:
@@ -256,7 +256,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 				note_2[1] + shift_vec.y * shift_multi,
 				note_2[2]
 			]
-			var test_validation_array: Array = processed_data.slice(-15) + [new_note] + secondary_preprocessed_data.slice(i+1, i+16)
+			var test_validation_array: Array = processed_data.slice(-3) + [new_note] + secondary_preprocessed_data.slice(i+1, i+4)
 			var current_valid: bool = true
 			for note: Array in map.data:
 				if note[2] >= test_validation_array[2][2] and note[2] <= test_validation_array[-3][2]:
@@ -278,6 +278,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 	#map.data = processed_data
 
 	#processed_data = secondary_preprocessed_data
+
 
 func _get_cursor_position_from_notes_and_elapsed(note_data: Array, elapsed: int) -> Vector2:
 	var temp_last_loaded_note: int = 0
