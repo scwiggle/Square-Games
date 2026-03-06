@@ -138,7 +138,6 @@ environment/ssil/blur_passes=0
 anti_aliasing/screen_space_roughness_limiter/enabled=false
 environment/screen_space_reflection/roughness_quality=0
 environment/subsurface_scattering/subsurface_scattering_quality=0
-limits/global_shader_variables/buffer_size=1048576
 lightmapping/probe_capture/update_speed=0.001
 lightmapping/lightmap_gi/use_bicubic_filter=false
 global_illumination/sdfgi/probe_ray_count=0

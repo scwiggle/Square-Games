@@ -3,7 +3,7 @@ extends RichTextLabel
 func _physics_process(_dt:float ) -> void:
 	self.text = str(Engine.get_frames_per_second())
 
-func teststuff(a:int,b:int,c:int,d:int) -> int:
+func teststuff(a:int=0,b:int=0,c:int=0,d:int=0) -> int:
 	var e: int = a+b*c+d
 	return e
 func benchmark() -> void:
@@ -56,8 +56,11 @@ func benchmark() -> void:
 
 	print("T1: {0}\nT2: {1}".format([t1a,t2a]))
 
+
 func _ready() -> void:
 	pass
+	print((Cursor.new().to_string()))
+	return
 	
 	var st: int = Time.get_ticks_usec()
 	
