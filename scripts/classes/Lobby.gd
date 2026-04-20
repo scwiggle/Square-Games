@@ -151,7 +151,7 @@ func start_lobby(map: MapLoader.Map) -> bool:
 
 	Terminal.is_accepting_input = false
 	Terminal.print_console("Starting lobby...\n")
-
+		
 	var game_handler: GameHandler = GameHandler.new(map)
 	SSCS.game_handler=game_handler
 
@@ -174,8 +174,7 @@ func start_lobby(map: MapLoader.Map) -> bool:
 	game_handler.ended.connect(func() -> void:
 		_send_to_clients(CLIENT_PACKET.DIED, var_to_bytes(SteamHandler.steam_id))
 		Terminal.print_console(Steam.getPersonaName() +" has died.\n")
-		Terminal.visible = true
-		Terminal.is_accepting_input = true
+		SSCS.user_interface.visible = true
 		game_handler.queue_free()
 
 		if SSCS.settings.auto_spectate:
@@ -194,7 +193,8 @@ func start_lobby(map: MapLoader.Map) -> bool:
 
 			if best != 0:
 				start_spectate(best)
-
+				return
+		
 	)
 
 	var game_scene:Node = $"/root/Game"
@@ -204,7 +204,7 @@ func start_lobby(map: MapLoader.Map) -> bool:
 	print("begin wait")
 	while clients_to_load > 0: await get_tree().physics_frame
 	print("wait done")
-	Terminal.visible = false
+	SSCS.user_interface.visible = false
 
 	_send_to_clients(CLIENT_PACKET.PLAY_START,[])
 	game_handler.play(0)
@@ -226,14 +226,12 @@ func start_spectate(user_id: int) -> void: #should be called only when there isn
 	SSCS.game_handler = game_handler
 	$"/root/Game".add_child(game_handler)
 
-	Terminal.is_accepting_input = false
-	Terminal.visible = false
+	SSCS.user_interface.visible = false
 
 	game_handler.ended.connect(func() -> void:
 		is_spectating = false
 		spectated_user = 0
-		Terminal.is_accepting_input = true
-		Terminal.visible = true
+		SSCS.user_interface.visible = true
 		game_handler.queue_free()
 	)
 
@@ -441,8 +439,7 @@ func _packet_received_client(packet: Dictionary) -> void:
 				SteamHandler.send_message(SteamHandler.connection, HOST_PACKET.DIED, [])
 				print("send died message")
 				Terminal.print_console(Steam.getPersonaName() +" has died.\n")
-				Terminal.visible = true
-				Terminal.is_accepting_input = true
+				SSCS.user_interface.visible = true
 				game_handler.queue_free()
 
 				if SSCS.settings.auto_spectate:
@@ -468,7 +465,7 @@ func _packet_received_client(packet: Dictionary) -> void:
 
 			SteamHandler.send_message(SteamHandler.connection,HOST_PACKET.PLAY_READY,[1])
 		CLIENT_PACKET.PLAY_START:
-			Terminal.visible = false
+			SSCS.user_interface.visible = false
 			SSCS.game_handler.play(0)
 
 			map_started_usec = Time.get_ticks_usec()

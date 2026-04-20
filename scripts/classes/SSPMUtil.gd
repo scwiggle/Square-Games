@@ -11,6 +11,18 @@ class SSPM:
 	var difficulty: String
 	var data_parsed: Array[Array]
 
+static func get_note_count(path: String) -> int:
+	var file:FileAccess = FileAccess.open(path,FileAccess.READ)
+
+	if file==null:
+		return 99999999
+	
+	file.seek(0x70) #just to make sure
+	var _markersOffset:int = file.get_64()
+	var markersLength:int = file.get_64()
+	
+	return markersLength
+	
 static func load_from_path(path: String) -> SSPM:
 	var newdata:SSPM = SSPM.new()
 

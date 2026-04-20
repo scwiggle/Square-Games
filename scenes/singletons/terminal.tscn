@@ -1,7 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5vqj61tm047m"]
+[gd_scene load_steps=7 format=3 uid="uid://b5vqj61tm047m"]
 
 [ext_resource type="Script" uid="uid://fpdfqibiw5d7" path="res://scripts/singletons/Terminal.gd" id="1_yjhey"]
 [ext_resource type="Theme" uid="uid://8kihldx6yt13" path="res://assets/themes/lineedit.tres" id="2_3cscc"]
+[ext_resource type="FontFile" uid="uid://dgn2mg62llrpw" path="res://assets/fonts/jetbrains-mono-regular.ttf" id="2_sff71"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sff71"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3cscc"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sff71"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="Terminal" type="Control"]
 layout_mode = 3
@@ -15,6 +28,7 @@ size_flags_vertical = 3
 script = ExtResource("1_yjhey")
 
 [node name="Background" type="ColorRect" parent="."]
+visible = false
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -32,7 +46,10 @@ anchor_bottom = 1.0
 offset_top = 32.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("2_sff71")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sff71")
 bbcode_enabled = true
+text = "this is my kingdom come"
 scroll_following = true
 
 [node name="LineEdit" type="LineEdit" parent="."]
@@ -43,5 +60,7 @@ anchor_right = 1.0
 offset_bottom = 32.0
 grow_horizontal = 2
 theme = ExtResource("2_3cscc")
-placeholder_text = "booty"
+theme_override_fonts/font = ExtResource("2_sff71")
+theme_override_styles/normal = SubResource("StyleBoxFlat_3cscc")
+theme_override_styles/focus = SubResource("StyleBoxFlat_sff71")
 keep_editing_on_text_submit = true

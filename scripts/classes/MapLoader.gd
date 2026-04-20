@@ -14,7 +14,11 @@ class Map:
 	var data: Array[Array]
 	var audio: AudioStream
 	var loaded_successfully: bool
+	var raw_map_name: String
 	var map_name: String
+	var author_name: String
+	var charter_name: String
+	var cover: Image
 
 #DEPRECATED because arrays are better in basically every way
 #class NoteDataMinimal:
@@ -87,6 +91,9 @@ static func from_path_sspm(path: String) -> Map: #path to a .sspm file
 	new_map.raw_data = sspm_parsed.data_csv
 	new_map.data = data
 	new_map.loaded_successfully = len(data) > 0
+	new_map.cover = sspm_parsed.cover
+	new_map.map_name = sspm_parsed.name
+	new_map.charter_name = sspm_parsed.mapper
 
 	return new_map
 
@@ -102,5 +109,9 @@ static func from_path_phxm(path: String) -> Map: #path to a .phxm file
 	new_map.raw_data = phxm_parsed.data_csv
 	new_map.data = data
 	new_map.loaded_successfully = len(data) > 0
+	new_map.cover = phxm_parsed.cover
+	new_map.map_name = phxm_parsed.metadata.Title
+	new_map.author_name = phxm_parsed.metadata.Artist
+	new_map.charter_name = ", ".join(phxm_parsed.metadata.Mappers)
 
 	return new_map

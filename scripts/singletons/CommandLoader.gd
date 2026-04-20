@@ -143,18 +143,25 @@ func _ready() -> void:
 			Terminal.print_console("Failed to set modifier.\n")
 	,["setm","setmodifier"]))
 
-	register_command(Command.new(func(map_name: String, start_from: String = "0") -> void:
-
+	register_command(Command.new(func(map_name: String = "", start_from: String = "0") -> void:
+		print("play ran")
 		print("load map %s" % map_name)
-		var map:MapLoader.Map = SSCS.load_map_from_name(map_name)
-
-		if !map.loaded_successfully:
-			map_name = SSCS.get_full_map_name_from_partial_name(map_name)
+		
+		var map:MapLoader.Map
+		if map_name == "":
+			print("map no name.")
+			map = SSCS.selected_map
+			print(map)
+		else:
 			map = SSCS.load_map_from_name(map_name)
 
-		if !map.loaded_successfully:
-			Terminal.print_console('Map "%s" does not exist.\n' % map_name)
-			return
+			if !map.loaded_successfully:
+				map_name = SSCS.get_full_map_name_from_partial_name(map_name)
+				map = SSCS.load_map_from_name(map_name)
+
+			if !map.loaded_successfully:
+				Terminal.print_console('Map "%s" does not exist.\n' % map_name)
+				return
 
 		var start_from_time: float = 0
 
@@ -168,7 +175,7 @@ func _ready() -> void:
 		if SSCS.lobby != null:
 			SSCS.lobby.start_lobby(map)
 			return
-
+		
 		var game_handler: GameHandler = GameHandler.new(map)
 		SSCS.game_handler=game_handler
 
@@ -179,18 +186,16 @@ func _ready() -> void:
 
 		game_handler.play(start_from_time)
 
-		Terminal.is_accepting_input = false
-		Terminal.visible = false
+		SSCS.user_interface.visible = false
 
 		await game_handler.ended
-
+		
+		SSCS.user_interface.visible = true
 		print("map ended")
 
 		game_handler.queue_free()
-		Terminal.visible = true
-		Terminal.is_accepting_input = true
 
-	,["play","playmap"],1))
+	,["play","playmap"], 0))
 
 	register_command(Command.new(func() -> void:
 		if SSCS.lobby != null: print("lobby exists"); return
@@ -290,20 +295,20 @@ func _ready() -> void:
 				SSCS.game_handler = game_handler
 				$"/root/Game".add_child(game_handler)
 
-				Terminal.is_accepting_input = false
-				Terminal.visible = false
+				SSCS.user_interface.visible = false
 				game_handler.play(replay_data.start_from)
 
 				await game_handler.ended
 
 				print("done")
 
-				Terminal.visible = true
-				Terminal.is_accepting_input = true
+				SSCS.user_interface.visible = true
 
 				game_handler.queue_free()
 				SSCS.settings = SSCS.true_settings
 				SSCS.modifiers = SSCS.true_modifiers
+				
+				get_tree().change_scene_to_file("res://scenes/user_interface.tscn")
 
 				break
 

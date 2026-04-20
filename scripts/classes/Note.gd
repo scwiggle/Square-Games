@@ -1,7 +1,7 @@
 extends Node
 class_name Note
 
-const note_material: ShaderMaterial = preload("res://assets/materials/note_shader_material.tres")
+#const note_material: ShaderMaterial = preload("res://assets/materials/note_shader_material.tres")
 
 var note_id: int = 0
 var color: Color

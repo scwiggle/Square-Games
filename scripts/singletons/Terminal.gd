@@ -49,6 +49,7 @@ func update_console() -> void:
 	output.text = console_text
 
 func _ready() -> void:
+	self.get_parent().call_deferred(&"remove_child", self)
 	update_console()
 	print_console("Welcome to Square Games. Type \"help\" to see all commands.\n")
 	input.edit()

@@ -116,6 +116,7 @@ func _input(event: InputEvent) -> void:
 			pos_world.x = pos.x
 			pos_world.y = pos.y
 			position = pos_world
+			
 			camera.position = Vector3(pos.x*parallax, pos.y*parallax, 0) + camera.basis.z * camera_push_forward
 
 			if semi_spin:

@@ -101,8 +101,7 @@ func start_lobby(from: float = 0) -> void:
 
 	cursor = game_handler.cursor
 
-	Terminal.is_accepting_input = false
-	Terminal.visible = false
+	SSCS.user_interface.visible = false
 
 	game_handler.play(from)
 
@@ -114,8 +113,7 @@ func start_lobby(from: float = 0) -> void:
 	NewSteamHandler.send_message_to_users([], ClientLobby.CLIENT_PACKET.PLAYER_DIED, died_packet)
 
 	game_handler.queue_free()
-	Terminal.visible = true
-	Terminal.is_accepting_input = true
+	SSCS.user_interface.visible = true
 
 func spectate_user(user_id: int) -> void:
 	if !user_data.has(user_id) or spectated_user != -1 or !user_data[user_id].alive: print("bad"); return
@@ -135,8 +133,7 @@ func spectate_user(user_id: int) -> void:
 
 	game_handler.hud.update_info_top(NewSteamHandler.get_user_display_name(user_id))
 
-	Terminal.is_accepting_input = false
-	Terminal.visible = false
+	SSCS.user_interface.visible = false
 
 	game_handler.play(((Time.get_ticks_msec() - lobby_start) / 1000.0) - 0.5)
 
@@ -146,8 +143,7 @@ func spectate_user(user_id: int) -> void:
 
 	spectated_user = -1
 	game_handler.queue_free()
-	Terminal.visible = true
-	Terminal.is_accepting_input = true
+	SSCS.user_interface.visible = true
 
 func _init(lobby_discoverability: int) -> void:
 	lobby_discoverability = discoverability

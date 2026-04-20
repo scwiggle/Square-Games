@@ -42,7 +42,7 @@ class Settings:
 	var fullscreen: bool = true:
 		set(x):
 			fullscreen = x
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
 
 	var map_volume: float = 1:
 		set(x):
@@ -92,8 +92,16 @@ var game_handler: GameHandler
 var map_cache: Dictionary[String, MapLoader.Map] = {}
 var url_cache: Dictionary[String, Dictionary] = {}
 
+var maps_to_load: PackedStringArray
+
+var selected_map: MapLoader.Map
+
+signal map_loaded(map: MapLoader.Map)
+
 var host_lobby: HostLobby
 var client_lobby: ClientLobby
+
+var user_interface: UserInterface
 
 var setting_parse_overrides: Dictionary[String,Callable] = {
 	color_set = func(value: String) -> Array:
@@ -362,7 +370,7 @@ func get_map_hash(map_name: String) -> PackedByteArray:
 	return hash_data
 
 func load_map_from_name(map_name: String, ignore_cache: bool = false) -> MapLoader.Map:
-	if !ignore_cache and map_cache.has(map_name):
+	if !ignore_cache and map_cache.has(map_name) and map_cache[map_name].loaded_successfully:
 		return map_cache[map_name]
 
 	var map: MapLoader.Map
@@ -373,12 +381,18 @@ func load_map_from_name(map_name: String, ignore_cache: bool = false) -> MapLoad
 	elif is_phxm:
 		map = MapLoader.from_path_phxm("user://phoenyxmaps/%s.phxm" % map_name)
 	else:
-		map = MapLoader.from_path_native("user://maps/%s" % map_name)
-	map.map_name = map_name
+		return MapLoader.Map.new()
+		#map = MapLoader.from_path_native("user://maps/%s" % map_name)
+	map.raw_map_name = map_name
 
 	map_cache[map_name] = map
+	map_loaded.emit(map)
+	
 
 	return map
+
+func seconds_to_timestamp(seconds: float) -> String:
+	return "{0}:{1}".format([floor(seconds / 60.0), floor(fmod(seconds, 60.0))])
 
 func _ready() -> void:
 	#make sure directories exist
@@ -405,6 +419,13 @@ func _ready() -> void:
 			"fov":
 				get_viewport().get_camera_3d().fov = new #idk why but you cant do this in a setter
 	)
+	
+	for map_name: String in DirAccess.get_files_at("user://rhythiamaps"):
+		load_map_from_name(map_name.get_basename())
+	for map_name: String in DirAccess.get_files_at("user://phoenyxmaps"):
+		load_map_from_name(map_name.get_basename())
+	
+	SSCS.selected_map = map_cache[map_cache.keys()[0]]
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:

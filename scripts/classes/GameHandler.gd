@@ -89,7 +89,7 @@ signal note_missed(note_id: int)
 func _init(map_arg: MapLoader.Map, is_replay: bool = false, replay_note_hit_data: PackedByteArray = [], replay_cursor_pos_data: PackedVector3Array = [], end_replay_on_end_of_data: bool = false) -> void:
 	map = map_arg
 	map_data = map.data
-
+	
 	var benchmark_start_1: int = Time.get_ticks_usec()
 
 	var max_t: int = ceil(((SSCS.settings.spawn_distance+0.1)/SSCS.settings.approach_rate)*1000) + SSCS.modifiers.hit_time
@@ -283,7 +283,7 @@ func play(from: float) -> void:
 	assert(not ran, "Tried to run game manager more than once")
 	ran = true
 
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+	Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN if SSCS.settings.absolute_input else Input.MOUSE_MODE_CAPTURED
 	cursor.pos = Vector2()
 	cursor.update_position()
 	playing = true

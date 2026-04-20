@@ -6,6 +6,18 @@ class PHXM:
 	var audio: AudioStream
 	var data_parsed: Array[Array]
 	var metadata: Dictionary
+	var cover: Image
+
+static func get_note_count(path: String) -> int:
+	var zip_reader: ZIPReader = ZIPReader.new()
+	var error: Error = zip_reader.open(path)
+	if error != Error.OK:
+		print(error)
+		return 999999
+	
+	var object_data: PackedByteArray = zip_reader.read_file("objects.phxmo")
+
+	return object_data.decode_u32(4)
 
 static func load_from_path(path: String) -> PHXM:
 	var zip_reader: ZIPReader = ZIPReader.new()
@@ -14,6 +26,7 @@ static func load_from_path(path: String) -> PHXM:
 	var new_map: PHXM = PHXM.new()
 
 	var metadata: Dictionary = JSON.parse_string(zip_reader.read_file("metadata.json").get_string_from_utf8())
+	new_map.metadata = metadata
 
 	if metadata.HasAudio:
 		var audio_extension: String = metadata.AudioExt
@@ -26,6 +39,13 @@ static func load_from_path(path: String) -> PHXM:
 				new_map.audio = AudioStreamWAV.load_from_buffer(audio_buffer)
 			"ogg":
 				new_map.audio = AudioStreamOggVorbis.load_from_buffer(audio_buffer)
+	
+	if metadata.HasCover:
+		var cover: Image = Image.new()
+		
+		cover.load_png_from_buffer(zip_reader.read_file("cover.png"))
+		
+		new_map.cover = cover
 
 	var object_data: PackedByteArray = zip_reader.read_file("objects.phxmo")
 

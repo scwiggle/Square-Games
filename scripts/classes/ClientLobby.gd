@@ -50,16 +50,14 @@ func spectate_user(user_id: int) -> void:
 
 	game_handler.hud.update_info_top(NewSteamHandler.get_user_display_name(user_id))
 
-	Terminal.is_accepting_input = false
-	Terminal.visible = false
+	SSCS.user_interface.visible = false
 
 	game_handler.play(((Time.get_ticks_msec() - lobby_start) / 1000.0) - 0.5)
 
 	await game_handler.ended
 
 	game_handler.queue_free()
-	Terminal.visible = true
-	Terminal.is_accepting_input = true
+	SSCS.user_interface.visible = true
 
 func _init(lobby_id: int = 0) -> void:
 
@@ -183,8 +181,7 @@ func _init(lobby_id: int = 0) -> void:
 
 				cursor = game_handler.cursor
 
-				Terminal.is_accepting_input = false
-				Terminal.visible = false
+				SSCS.user_interface.visible = false
 
 				game_handler.play(from)
 
@@ -196,8 +193,7 @@ func _init(lobby_id: int = 0) -> void:
 
 				SSCS.modifiers = SSCS.true_modifiers
 				game_handler.queue_free()
-				Terminal.visible = true
-				Terminal.is_accepting_input = true
+				SSCS.user_interface.visible = true
 			CLIENT_PACKET.PLAYER_DIED:
 				var died_user_id: int = packet_data.decode_u64(0)
 

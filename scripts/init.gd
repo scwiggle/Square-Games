@@ -2,4 +2,4 @@ extends Control
 
 
 func _ready() -> void:
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	get_tree().change_scene_to_file("res://scenes/user_interface.tscn")

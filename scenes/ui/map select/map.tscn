@@ -1,0 +1,84 @@
+[gd_scene load_steps=6 format=3 uid="uid://b36rrbhvs1ky6"]
+
+[ext_resource type="Texture2D" uid="uid://djm8y1mnluy33" path="res://assets/defaults/cursor.jpg" id="1_e120q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e120q"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nta25"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.48452926, 0.48452926, 0.48452926, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wm0wn"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.225, 0.225, 0.225, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wm0wn"]
+
+[node name="Button" type="Button"]
+custom_minimum_size = Vector2(1000, 141)
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_e120q")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_nta25")
+theme_override_styles/hover = SubResource("StyleBoxFlat_wm0wn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wm0wn")
+toggle_mode = true
+
+[node name="Map" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(500, 75)
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 802.0
+offset_bottom = 133.0
+
+[node name="Cover" type="TextureRect" parent="Map"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+texture = ExtResource("1_e120q")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Control" type="VBoxContainer" parent="Map"]
+layout_mode = 2
+
+[node name="Map Name" type="RichTextLabel" parent="Map/Control"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/normal_font_size = 24
+text = "this is the map name + author name you stupid fat retard"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Charter Name" type="RichTextLabel" parent="Map/Control"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "this is the charter name you stupid fat retard"
+fit_content = true
+autowrap_mode = 0

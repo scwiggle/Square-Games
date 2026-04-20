@@ -1,0 +1,73 @@
+[gd_scene load_steps=8 format=3 uid="uid://ce03mdwatx55m"]
+
+[ext_resource type="Script" uid="uid://cj8tc4rt3wu5r" path="res://scripts/ui/settings.gd" id="1_8wfqe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8wfqe"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7pacj"]
+bg_color = Color(0, 0, 0, 0.6)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h175o"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0.050980397)
+border_color = Color(0.44705883, 0.44705883, 0.44705883, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptynm"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0.098039225)
+border_color = Color(1, 1, 1, 0.69803923)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8wfqe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ncfhn"]
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8wfqe")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 8
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/side_margin = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8wfqe")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_7pacj")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_h175o")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_h175o")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_ptynm")
+theme_override_styles/tab_focus = SubResource("StyleBoxEmpty_8wfqe")
+tab_alignment = 1
+
+[node name="TopFill" type="Panel" parent="."]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ncfhn")

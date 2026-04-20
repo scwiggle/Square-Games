@@ -59,23 +59,21 @@ func benchmark() -> void:
 
 func _ready() -> void:
 	pass
-	print((Cursor.new().to_string()))
-	return
 	
-	var st: int = Time.get_ticks_usec()
-	
-	for i in range(0, 100_000):
-		var a: Array = []
-		a.resize(1000)
-		
-		var i2: int = 0
-		var al: int = len(a)
-		while i2 < al:
-			i2 += 1
-	
-	var et: int = Time.get_ticks_usec()
-	
-	print((et - st) / 1_000.0)
+	#var st: int = Time.get_ticks_usec()
+	#
+	#for i in range(0, 100_000):
+		#var a: Array = []
+		#a.resize(1000)
+		#
+		#var i2: int = 0
+		#var al: int = len(a)
+		#while i2 < al:
+			#i2 += 1
+	#
+	#var et: int = Time.get_ticks_usec()
+	#
+	#print((et - st) / 1_000.0)
 
 	#var sspm: SSPMUtil.SSPM = SSPMUtil.load_from_path("user://rhythiamaps/stress.sspm")
 

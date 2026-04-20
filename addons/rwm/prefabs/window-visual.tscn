@@ -1,0 +1,90 @@
+[gd_scene load_steps=6 format=3 uid="uid://dy605rexg7166"]
+
+[ext_resource type="Script" uid="uid://b30gcvbna8gsb" path="res://addons/rwm/scripts/behaviors/window-visual.gd" id="1_v87h6"]
+[ext_resource type="Shader" uid="uid://cdyarmib7nw1d" path="res://addons/rwm/shaders/blur.gdshader" id="2_3awhn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uww04"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cdnev"]
+shader = ExtResource("2_3awhn")
+shader_parameter/blur_scale = 12.0
+shader_parameter/variance = 0.005
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_db8an"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+
+[node name="RwmWindow" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_v87h6")
+
+[node name="Visual" type="Control" parent="."]
+top_level = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Backdrop" type="Panel" parent="Visual"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uww04")
+
+[node name="BlurLayer" type="ColorRect" parent="Visual/Backdrop"]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_cdnev")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Border" type="Panel" parent="Visual/Backdrop"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_db8an")
+
+[node name="ViewportContainer" type="SubViewportContainer" parent="Visual"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="Viewport" type="SubViewport" parent="Visual/ViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(2, 2)
+render_target_update_mode = 4

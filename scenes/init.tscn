@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://ctmbjuytru57"]
+[gd_scene load_steps=3 format=3 uid="uid://ctmbjuytru57"]
 
 [ext_resource type="Script" uid="uid://b0ww68urqc2sv" path="res://scripts/init.gd" id="1_wm5da"]
+[ext_resource type="Script" uid="uid://mbpfh1oaxalq" path="res://scripts/ui/ui_primer.gd" id="2_cmtoo"]
 
 [node name="Init" type="Control"]
 layout_mode = 3
@@ -10,3 +11,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_wm5da")
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("2_cmtoo")

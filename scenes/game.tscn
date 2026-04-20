@@ -1,6 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dxie0udrkwq8l"]
+[gd_scene load_steps=7 format=3 uid="uid://dxie0udrkwq8l"]
 
+[ext_resource type="Script" uid="uid://ddjljd0ndvw51" path="res://scripts/ui/user_interface.gd" id="1_iywne"]
+[ext_resource type="Texture2D" uid="uid://dwththqylnrq" path="res://assets/textures/a_cartoon_of_a_girl_with_yellow_hair_and_pink_dress.png" id="1_lbhrr"]
+[ext_resource type="Script" uid="uid://mbpfh1oaxalq" path="res://scripts/ui/ui_primer.gd" id="2_iywne"]
 [ext_resource type="Script" uid="uid://bpbaqt3f4n3k6" path="res://scripts/fps.gd" id="3_lnu2h"]
+[ext_resource type="Script" uid="uid://cmwvxdtxcitxi" path="res://addons/rwm/scripts/components/masterspace.gd" id="3_p57ef"]
 
 [sub_resource type="Environment" id="Environment_uwrxv"]
 background_mode = 1
@@ -18,16 +22,45 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 environment = SubResource("Environment_uwrxv")
 current = true
 
-[node name="UI" type="Control" parent="."]
+[node name="UserInterface" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_iywne")
 
-[node name="FPS" type="RichTextLabel" parent="UI"]
+[node name="TextureRect" type="TextureRect" parent="UserInterface"]
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_lbhrr")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Control" type="Control" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_iywne")
+
+[node name="Masterspace" type="Control" parent="UserInterface/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_p57ef")
+
+[node name="FPS" type="RichTextLabel" parent="."]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
