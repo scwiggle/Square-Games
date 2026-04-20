@@ -62,7 +62,7 @@ project/assembly_name="SSCS"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/SmoothScroll/plugin.cfg", "res://addons/rwm/plugin.cfg")
 
 [file_customization]
 

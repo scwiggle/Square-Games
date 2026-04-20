@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://lm6c652l2f1m"]
+[gd_scene load_steps=6 format=3 uid="uid://lm6c652l2f1m"]
 
 [ext_resource type="Script" uid="uid://phbt85td8n51" path="res://scripts/ui/map_select.gd" id="1_xu83e"]
+[ext_resource type="Script" uid="uid://bgqglerkcylxx" path="res://addons/SmoothScroll/smooth_scroll_container.gd" id="2_85bql"]
+[ext_resource type="Script" uid="uid://b7h0k2h2qwlqv" path="res://addons/SmoothScroll/scroll_damper/expo_scroll_damper.gd" id="3_71ggq"]
+
+[sub_resource type="Resource" id="Resource_hw8mj"]
+script = ExtResource("3_71ggq")
+
+[sub_resource type="Resource" id="Resource_rjiye"]
+script = ExtResource("3_71ggq")
 
 [node name="MapSelect" type="Control"]
 layout_mode = 3
@@ -33,6 +41,11 @@ placeholder_text = "Search"
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("2_85bql")
+wheel_scroll_damper = SubResource("Resource_hw8mj")
+dragging_scroll_damper = SubResource("Resource_rjiye")
+metadata/_custom_type_script = "uid://bgqglerkcylxx"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
+metadata/_smooth_scroll_default_mouse_filter_set = true

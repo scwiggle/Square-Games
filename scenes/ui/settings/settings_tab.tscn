@@ -1,7 +1,21 @@
-[gd_scene format=3 uid="uid://bxyqf3msrtt2a"]
+[gd_scene load_steps=5 format=3 uid="uid://bxyqf3msrtt2a"]
+
+[ext_resource type="Script" uid="uid://bgqglerkcylxx" path="res://addons/SmoothScroll/smooth_scroll_container.gd" id="1_cqnek"]
+[ext_resource type="Script" uid="uid://b7h0k2h2qwlqv" path="res://addons/SmoothScroll/scroll_damper/expo_scroll_damper.gd" id="2_f5cmk"]
+
+[sub_resource type="Resource" id="Resource_78x08"]
+script = ExtResource("2_f5cmk")
+
+[sub_resource type="Resource" id="Resource_orqit"]
+script = ExtResource("2_f5cmk")
 
 [node name="ScrollContainer" type="ScrollContainer"]
+offset_right = 1032.0
 horizontal_scroll_mode = 0
+script = ExtResource("1_cqnek")
+wheel_scroll_damper = SubResource("Resource_78x08")
+dragging_scroll_damper = SubResource("Resource_orqit")
+metadata/_custom_type_script = "uid://bgqglerkcylxx"
 metadata/_tab_index = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -12,9 +26,11 @@ theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
+metadata/_smooth_scroll_default_mouse_filter_set = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(1000, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 0
+metadata/_smooth_scroll_default_mouse_filter_set = true
