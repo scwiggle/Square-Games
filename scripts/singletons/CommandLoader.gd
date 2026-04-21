@@ -45,31 +45,6 @@ const command_help:Dictionary = {
 		arguments = ["Map Name", "Start Position"],
 		use = "Plays the map with the name Map Name"
 	},
-	createlobby = {
-		aliases = ["cl"],
-		arguments = [],
-		use = "Creates a lobby. Can be connected to with the command \"joinlobby\""
-	},
-	joinlobby = {
-		aliases = ["jl"],
-		arguments = ["Steam ID"],
-		use = "Joins the lobby of the player with the steam user id Steam ID."
-	},
-	leavelobby = {
-		aliases = ["ll"],
-		arguments = [],
-		use = "Leaves the current lobby."
-	},
-	message = {
-		aliases = ["msg","chat"],
-		arguments = [],
-		use = "Sends a message to the other users in your lobby."
-	},
-	spectate = {
-		aliases = ["spec"],
-		arguments = ["Steam ID"],
-		use = "Spectates the user with the given steam id if they are in the game."
-	},
 	replay = {
 		aliases = ["rp"],
 		arguments = ["Replay file id"],
@@ -197,39 +172,6 @@ func _ready() -> void:
 
 	,["play","playmap"], 0))
 
-	register_command(Command.new(func() -> void:
-		if SSCS.lobby != null: print("lobby exists"); return
-
-		print("attempt create")
-		SSCS.lobby = Lobby.new()
-
-		var game_scene:Node = $"/root/Game"
-		game_scene.add_child(SSCS.lobby)
-	,["createlobby","cl"]))
-
-	register_command(Command.new(func(uid: String) -> void:
-		if SSCS.lobby != null or !uid.is_valid_int(): print("lobby exists"); return
-
-		print("attempt join")
-		SSCS.lobby = Lobby.new(uid.to_int())
-
-		var game_scene:Node = $"/root/Game"
-		game_scene.add_child(SSCS.lobby)
-	,["joinlobby","jl"]))
-
-	register_command(Command.new(func(...msg: Array) -> void:
-		if SSCS.lobby == null: print("lobby doesnt exist"); return
-
-		SSCS.lobby.send_chat_message(" ".join(msg))
-	,["message","msg","chat"],1,true, false))
-
-	register_command(Command.new(func() -> void:
-		if SSCS.lobby == null: print("lobby doesnt exist"); return
-
-		SSCS.lobby.queue_free()
-
-	,["leavelobby","ll"]))
-
 	register_command(Command.new(func(command: String = "") -> void:
 		print("we playing")
 		if command == "":
@@ -257,23 +199,6 @@ func _ready() -> void:
 		var command_info: Dictionary = command_help[real_command]
 		Terminal.print_console("Command Name: {0}\nAliases: {1}\nArguments: {2}\n\n{3}\n".format([real_command,", ".join(command_info.aliases),", ".join(command_info.arguments),command_info.use]))
 	,["help"],0))
-
-	register_command(Command.new(func(...user_name_array: Array) -> void:
-		if SSCS.lobby == null: print("lobby doesnt exist"); return
-		var user_name: String = " ".join(user_name_array)
-
-		for user_id: int in SSCS.lobby.lobby_users:
-			var data: Dictionary = SSCS.lobby.lobby_users[user_id]
-			if data.user_name == user_name or data.fake_username == user_name:
-				SSCS.lobby.start_spectate(user_id)
-				return
-
-		if user_name.is_valid_int():
-			SSCS.lobby.start_spectate(user_name.to_int())
-			return
-
-		Terminal.print_console("Specified user does not exist.\n")
-	,["spectate","spec"], 1, true))
 
 	register_command(Command.new(func() -> void:
 		for i:String in SSCS.encode_class(SSCS.modifiers):

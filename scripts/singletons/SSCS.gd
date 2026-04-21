@@ -87,7 +87,6 @@ var modifiers: Modifiers = Modifiers.new()
 var true_settings: Settings = settings
 var true_modifiers: Modifiers = modifiers
 
-var lobby: Lobby
 var game_handler: GameHandler
 var map_cache: Dictionary[String, MapLoader.Map] = {}
 var url_cache: Dictionary[String, Dictionary] = {}

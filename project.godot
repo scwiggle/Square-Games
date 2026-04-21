@@ -39,7 +39,6 @@ SSCS="*res://scripts/singletons/SSCS.gd"
 Terminal="*res://scenes/singletons/terminal.tscn"
 CommandLoader="*res://scripts/singletons/CommandLoader.gd"
 AudioManager="*res://scripts/singletons/AudioManager.gd"
-SteamHandler="*res://scripts/singletons/SteamHandler.gd"
 NewSteamHandler="*res://scripts/singletons/NewSteamHandler.gd"
 
 [debug]
