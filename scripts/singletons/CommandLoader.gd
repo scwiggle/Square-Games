@@ -146,10 +146,6 @@ func _ready() -> void:
 			start_from_time = map.data[0][2]/1000.0
 
 		print("num notes: ", str(len(map.data)))
-
-		if SSCS.lobby != null:
-			SSCS.lobby.start_lobby(map)
-			return
 		
 		var game_handler: GameHandler = GameHandler.new(map)
 		SSCS.game_handler=game_handler
@@ -232,8 +228,6 @@ func _ready() -> void:
 				game_handler.queue_free()
 				SSCS.settings = SSCS.true_settings
 				SSCS.modifiers = SSCS.true_modifiers
-				
-				get_tree().change_scene_to_file("res://scenes/user_interface.tscn")
 
 				break
 

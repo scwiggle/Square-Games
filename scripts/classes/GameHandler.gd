@@ -291,7 +291,7 @@ func play(from: float) -> void:
 	AudioManager.set_playback_speed(speed_multiplier)
 	AudioManager.play(from - 1 * speed_multiplier)
 
-	if record_replays and !is_replay and SSCS.lobby == null and !autoplay:
+	if record_replays and !is_replay and !autoplay:
 		note_hit.connect(func(note_id: int) -> void:
 			recorded_replay_note_hit_data.resize(max(len(recorded_replay_note_hit_data), note_id + 1))
 			recorded_replay_note_hit_data[note_id] = 1
@@ -482,7 +482,7 @@ func _check_hitreg() -> void:
 			if note_t < elapsed:
 				if note_t < boundary:
 					misses += 1
-					health = health - 1.0
+					health -= 1.0
 					if use_miss_sound: miss_sound_player.play(0)
 					note_missed.emit(note.note_id)
 
@@ -492,7 +492,7 @@ func _check_hitreg() -> void:
 					
 					if maxf(diff.x, diff.y) < hitbox_size:
 						hits += 1
-						health = health + 0.5
+						health += 0.5
 						if use_hit_sound: hit_sound_player.play(0)
 						note_hit.emit(note.note_id)
 
@@ -569,14 +569,14 @@ func _process(_dt: float) -> void:
 #endregion
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"pause") and SSCS.lobby == null and !SSCS.settings.disable_pausing:
+	if event.is_action_pressed(&"pause") and !SSCS.settings.disable_pausing:
 		if playing:
 			pause()
 		else:
 			unpause()
 
 func _physics_process(_delta: float) -> void:
-	if record_replays and playing and !is_replay and SSCS.lobby == null and !autoplay:
+	if record_replays and playing and !is_replay and !autoplay:
 		var cursor_pos: Vector2 = cursor.pos
 		var cursor_pos_time: Vector3 = Vector3(cursor_pos.x,cursor_pos.y,AudioManager.elapsed)
 

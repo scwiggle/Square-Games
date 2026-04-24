@@ -5,8 +5,8 @@ static func create_replay_without_map(map: MapLoader.Map, replay_note_hit_data: 
 	return var_to_bytes_with_objects({
 		has_attached_map = false,
 
-		map_name = map.map_name,
-		map_hash = SSCS.get_map_hash(map.map_name),
+		map_name = map.raw_map_name,
+		map_hash = SSCS.get_map_hash(map.raw_map_name),
 
 		replay_note_hit_data = replay_note_hit_data,
 		replay_cursor_pos_data = replay_cursor_pos_data,
@@ -22,9 +22,12 @@ static func get_data_from_replay(raw_data: PackedByteArray) -> Dictionary:
 	var map: MapLoader.Map
 
 	if !data.has_attached_map:
+		print("get map shit")
 		if data.map_hash != SSCS.get_map_hash(data.map_name):
 			return {}
-		map = SSCS.load_map_from_name(data.map_name)
+		map = SSCS.load_map_from_name(data.map_name) 
+		print(map.loaded_successfully)
+		print(data.map_name)
 
 	var replay_settings: SSCS.Settings = SSCS.Settings.new()
 	for i: String in data.settings:
