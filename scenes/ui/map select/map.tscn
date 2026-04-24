@@ -49,6 +49,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_nta25")
 theme_override_styles/hover = SubResource("StyleBoxFlat_wm0wn")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wm0wn")
 toggle_mode = true
+action_mode = 0
 
 [node name="Map" type="HBoxContainer" parent="."]
 custom_minimum_size = Vector2(500, 75)

@@ -25,6 +25,7 @@ func create_map(map: MapLoader.Map) -> void:
 	new_map.pressed.connect(func() -> void:
 		if last_selected == new_map:
 			new_map.button_pressed = true
+			return
 		
 		last_selected.button_pressed = false
 		last_selected = new_map
