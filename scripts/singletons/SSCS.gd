@@ -390,7 +390,39 @@ func load_map_from_name(map_name: String, ignore_cache: bool = false) -> MapLoad
 
 	return map
 
-func seconds_to_timestamp(seconds: float) -> String:
+func load_unloaded_maps() -> void:
+	var mutex: Mutex = Mutex.new()
+	
+	var to_load: PackedStringArray = []
+	
+	for map_name: String in DirAccess.get_files_at("user://rhythiamaps"):
+		to_load.append(map_name.get_basename())
+	for map_name: String in DirAccess.get_files_at("user://phoenyxmaps"):
+		to_load.append(map_name.get_basename())
+		
+	var task_id: int = WorkerThreadPool.add_group_task(func(index: int) -> void:
+		var map_name: String = to_load[index]
+		if map_cache[map_name]: return
+		var map: MapLoader.Map
+		var is_sspm: bool = FileAccess.file_exists("user://rhythiamaps/%s.sspm" % map_name)
+		var is_phxm: bool = FileAccess.file_exists("user://phoenyxmaps/%s.phxm" % map_name)
+		if is_sspm:
+			map = MapLoader.from_path_sspm("user://rhythiamaps/%s.sspm" % map_name)
+		elif is_phxm:
+			map = MapLoader.from_path_phxm("user://phoenyxmaps/%s.phxm" % map_name)
+		else:
+			map = MapLoader.Map.new()
+			#map = MapLoader.from_path_native("user://maps/%s" % map_name)
+		map.raw_map_name = map_name
+		
+		mutex.lock()
+		map_cache[map_name] = map
+		mutex.unlock()
+	, len(to_load), -1, true)
+	
+	WorkerThreadPool.wait_for_group_task_completion(task_id)
+
+static func seconds_to_timestamp(seconds: float) -> String:
 	return "{0}:{1}".format([floor(seconds / 60.0), floor(fmod(seconds, 60.0))])
 
 func _ready() -> void:
@@ -419,10 +451,7 @@ func _ready() -> void:
 				get_viewport().get_camera_3d().fov = new #idk why but you cant do this in a setter
 	)
 	
-	for map_name: String in DirAccess.get_files_at("user://rhythiamaps"):
-		load_map_from_name(map_name.get_basename())
-	for map_name: String in DirAccess.get_files_at("user://phoenyxmaps"):
-		load_map_from_name(map_name.get_basename())
+	load_unloaded_maps()
 	
 	SSCS.selected_map = map_cache[map_cache.keys()[0]]
 
