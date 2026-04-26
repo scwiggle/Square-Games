@@ -2,7 +2,20 @@ extends Node
 class_name SSPMUtil
 
 class SSPM:
-	var data_csv: String
+	var data_csv: String:
+		get():
+			if data_csv != "":
+				return data_csv
+			else:
+				var csv_data: PackedStringArray = []
+				csv_data.resize(len(data_csv))
+
+				for i: int in range(len(data_csv)):
+					var v: Array = data_parsed[i]
+					csv_data[i] = "|".join(v) #("{0}|{1}|{2}".format([v.x,v.y,v.t]))
+
+				data_csv=",".join(csv_data)
+				return data_csv
 	var audio: AudioStream
 	var audiobuffer: PackedByteArray
 	var cover: Image
@@ -10,6 +23,8 @@ class SSPM:
 	var mapper: String
 	var difficulty: String
 	var data_parsed: Array[Array]
+
+static var total_load: float = 0
 
 static func get_note_count(path: String) -> int:
 	var file:FileAccess = FileAccess.open(path,FileAccess.READ)
@@ -24,6 +39,7 @@ static func get_note_count(path: String) -> int:
 	return markersLength
 	
 static func load_from_path(path: String) -> SSPM:
+	#var load_start: int = Time.get_ticks_usec()
 	var newdata:SSPM = SSPM.new()
 
 	var file:FileAccess = FileAccess.open(path,FileAccess.READ)
@@ -133,7 +149,7 @@ static func load_from_path(path: String) -> SSPM:
 
 	file.seek(markersOffset)
 
-	var benchmarking_start_1: int = Time.get_ticks_usec()
+	#var benchmarking_start_1: int = Time.get_ticks_usec()
 
 	var note_data: Array[Array]
 	note_data.resize(noteCount)
@@ -146,51 +162,55 @@ static func load_from_path(path: String) -> SSPM:
 		var isQuantum: int = file.get_16()
 
 		if isQuantum==0:
-			var new_note_data: Array = [
+			#var new_note_data: Array = [
+				#1.0 - file.get_8(),
+				#1.0 - file.get_8(),
+				#ms
+			#]
+
+			note_data[i] = [
 				1.0 - file.get_8(),
 				1.0 - file.get_8(),
 				ms
 			]
-
-			note_data[i] = new_note_data
 		else:
-			var new_note_data: Array = [
+			#var new_note_data: Array = [
+				#1.0 - file.get_float(),
+				#1.0 - file.get_float(),
+				#ms
+			#]
+
+			note_data[i] = [
 				1.0 - file.get_float(),
 				1.0 - file.get_float(),
 				ms
 			]
 
-			note_data[i] = new_note_data
-
-	var benchmarking_end_1: int = Time.get_ticks_usec()
-	var benchmarking_start_2: int = Time.get_ticks_usec()
+	#var benchmarking_end_1: int = Time.get_ticks_usec()
+	#var benchmarking_start_2: int = Time.get_ticks_usec()
 
 	note_data.sort_custom(
 		func(a: Array, b: Array) -> bool:
 			return a[2] < b[2]
 	)
 
-	var benchmarking_end_2: int = Time.get_ticks_usec()
-	var benchmarking_start_3: int = Time.get_ticks_usec()
-
-	var csv_data: PackedStringArray = []
-	csv_data.resize(noteCount)
-
-	for i: int in range(noteCount):
-		var v: Array = note_data[i]
-		csv_data[i] = "|".join(v) #("{0}|{1}|{2}".format([v.x,v.y,v.t]))
-
-	newdata.data_csv=",".join(csv_data)
-
-	var benchmarking_end_3: int = Time.get_ticks_usec()
+	#var benchmarking_end_2: int = Time.get_ticks_usec()
+	#var benchmarking_start_3: int = Time.get_ticks_usec()
+#
+	#var benchmarking_end_3: int = Time.get_ticks_usec()
 
 	newdata.data_parsed=note_data
+	
+	#var load_end: int = Time.get_ticks_usec()
+	#
+	#total_load += (load_end - load_start)/1000.0
 
-	print("Took {0} ms to load notes and {1} ms to sort and {2} ms to make csv data with {3} notes".format([
-		(benchmarking_end_1-benchmarking_start_1)/1000.0,
-		(benchmarking_end_2-benchmarking_start_2)/1000.0,
-		(benchmarking_end_3-benchmarking_start_3)/1000.0,
-		len(note_data)])
-	)
+	#print("Took {0} ms to load notes and {1} ms to sort and {2} ms to make csv data with {3} notes, total time spent loading of {4}".format([
+		#(benchmarking_end_1-benchmarking_start_1)/1000.0,
+		#(benchmarking_end_2-benchmarking_start_2)/1000.0,
+		#(benchmarking_end_3-benchmarking_start_3)/1000.0,
+		#len(note_data),
+		#total_load])
+	#)
 
 	return newdata
