@@ -402,7 +402,7 @@ func load_unloaded_maps() -> void:
 		
 	var task_id: int = WorkerThreadPool.add_group_task(func(index: int) -> void:
 		var map_name: String = to_load[index]
-		if map_cache[map_name]: return
+		if map_cache.has(map_name): return
 		var map: MapLoader.Map
 		var is_sspm: bool = FileAccess.file_exists("user://rhythiamaps/%s.sspm" % map_name)
 		var is_phxm: bool = FileAccess.file_exists("user://phoenyxmaps/%s.phxm" % map_name)
