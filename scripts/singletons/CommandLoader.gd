@@ -123,20 +123,15 @@ func _ready() -> void:
 		print("load map %s" % map_name)
 		
 		var map:MapLoader.Map
-		if map_name == "":
-			print("map no name.")
-			map = SSCS.selected_map
-			print(map)
-		else:
+		map = SSCS.load_map_from_name(map_name)
+
+		if !map.loaded_successfully:
+			map_name = SSCS.get_full_map_name_from_partial_name(map_name)
 			map = SSCS.load_map_from_name(map_name)
 
-			if !map.loaded_successfully:
-				map_name = SSCS.get_full_map_name_from_partial_name(map_name)
-				map = SSCS.load_map_from_name(map_name)
-
-			if !map.loaded_successfully:
-				Terminal.print_console('Map "%s" does not exist.\n' % map_name)
-				return
+		if !map.loaded_successfully:
+			Terminal.print_console('Map "%s" does not exist.\n' % map_name)
+			return
 
 		var start_from_time: float = 0
 
@@ -167,6 +162,41 @@ func _ready() -> void:
 		game_handler.queue_free()
 
 	,["play","playmap"], 0))
+	
+	register_command(Command.new(func(start_from: String = "0") -> void:
+		print("play ran")
+		
+		var map:MapLoader.Map = SSCS.selected_map
+
+		var start_from_time: float = 0
+
+		if start_from.is_valid_float():
+			start_from_time = start_from.to_float()
+		elif ["start", "s", "beggining", "b"].has(start_from):
+			start_from_time = map.data[0][2]/1000.0
+
+		print("num notes: ", str(len(map.data)))
+		
+		var game_handler: GameHandler = GameHandler.new(map)
+		SSCS.game_handler=game_handler
+
+
+		var game_scene:Node = $"/root/Game"
+
+		game_scene.add_child(game_handler)
+
+		game_handler.play(start_from_time)
+
+		SSCS.user_interface.visible = false
+
+		await game_handler.ended
+		
+		SSCS.user_interface.visible = true
+		print("map ended")
+
+		game_handler.queue_free()
+
+	,["plays","playselectedmap"], 0))
 
 	register_command(Command.new(func(command: String = "") -> void:
 		print("we playing")

@@ -304,6 +304,10 @@ func play(from: float) -> void:
 
 		ended.connect(func() -> void:
 			var new_replay: FileAccess = FileAccess.open("user://replays/" + "{0} {1} {2}.sscr".format([len(DirAccess.get_files_at("user://replays")), map.map_name, Time.get_datetime_string_from_system(false, true)]).replace(" ","_").replace(":","_"), FileAccess.WRITE)
+			if new_replay == null:
+				print("wtf no replay???")
+				print(FileAccess.get_open_error())
+				return
 			print(new_replay)
 			new_replay.store_buffer(ReplayParser.create_replay_without_map(map, recorded_replay_note_hit_data, recorded_replay_cursor_pos_data, SSCS.settings, SSCS.modifiers, from))
 		)
