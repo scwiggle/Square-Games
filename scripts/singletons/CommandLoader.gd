@@ -277,7 +277,6 @@ func _ready() -> void:
 	,["nsp"]))
 
 	register_command(Command.new(func() -> void:
-		print(ProjectSettings.globalize_path("%appdata%/SoundSpacePlus/settings.json"))
 
 		var settings_path: String
 		match OS.get_name().to_lower():
@@ -340,3 +339,18 @@ func _ready() -> void:
 		if user_id != -1 and user_id != NewSteamHandler.local_steam_id:
 			Steam.setLobbyOwner(NewSteamHandler.current_lobby_id, user_id)
 	,["nso"]))
+	
+	register_command(Command.new(func() -> void:
+
+		var maps_path: String
+		match OS.get_name().to_lower():
+			"linux": maps_path = "/home/%s/.local/share/SoundSpacePlus/maps" % OS.get_environment("USER")
+			"windows": maps_path = "%s/SoundSpacePlus/maps" % OS.get_environment("appdata").replace("\\","/")
+		
+		for map: String in DirAccess.get_files_at(maps_path):
+			DirAccess.copy_absolute(maps_path + "/%s" % map, "user://rhythiamaps/%s" % map)
+	,["importmaps"]))
+	
+	register_command(Command.new(func() -> void:
+		SSCS.load_unloaded_maps()
+	,["loadunloadedmaps"]))
