@@ -39,7 +39,7 @@ static func get_note_count(path: String) -> int:
 	return markersLength
 	
 static func load_from_path(path: String) -> SSPM:
-	#var load_start: int = Time.get_ticks_usec()
+	var load_start: int = Time.get_ticks_usec()
 	var newdata:SSPM = SSPM.new()
 
 	var file:FileAccess = FileAccess.open(path,FileAccess.READ)
@@ -107,6 +107,7 @@ static func load_from_path(path: String) -> SSPM:
 	#else:
 	newdata.name=mapname
 
+	#var benchmarking_start_3: int = Time.get_ticks_usec()
 
 	if hasAudio:
 		file.seek(audioOffset)
@@ -144,7 +145,8 @@ static func load_from_path(path: String) -> SSPM:
 				print(char(v))
 
 		newdata.cover=cover
-
+	
+	#var benchmarking_end_3: int = Time.get_ticks_usec()
 	#only reason we go to marker definitions is for ssp_note
 
 	file.seek(markersOffset)
@@ -195,17 +197,14 @@ static func load_from_path(path: String) -> SSPM:
 	)
 
 	#var benchmarking_end_2: int = Time.get_ticks_usec()
-	#var benchmarking_start_3: int = Time.get_ticks_usec()
-#
-	#var benchmarking_end_3: int = Time.get_ticks_usec()
 
 	newdata.data_parsed=note_data
 	
-	#var load_end: int = Time.get_ticks_usec()
-	#
-	#total_load += (load_end - load_start)/1000.0
+	var load_end: int = Time.get_ticks_usec()
+	
+	total_load += (load_end - load_start)/1000.0
 
-	#print("Took {0} ms to load notes and {1} ms to sort and {2} ms to make csv data with {3} notes, total time spent loading of {4}".format([
+	#print("Took {0} ms to load notes and {1} ms to sort and {2} ms to make cover and audio with {3} notes, total time spent loading of {4}".format([
 		#(benchmarking_end_1-benchmarking_start_1)/1000.0,
 		#(benchmarking_end_2-benchmarking_start_2)/1000.0,
 		#(benchmarking_end_3-benchmarking_start_3)/1000.0,

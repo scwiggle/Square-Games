@@ -32,7 +32,7 @@ func add_setting(tab_name: String, setting_name: String, setting_type: String, o
 	
 	tabs[tab_name].get_node("MarginContainer/VBoxContainer").add_child(new_setting)
 
-func default_bool_callback(value: bool, input: CheckBox, setting_name: String) -> void:
+func default_bool_callback(value: bool, _input: CheckBox, setting_name: String) -> void:
 	SSCS.set_setting(setting_name, value, true)
 
 func default_string_callback(value: String, input: LineEdit, setting_name: String) -> void:

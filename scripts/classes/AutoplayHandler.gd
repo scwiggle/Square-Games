@@ -107,7 +107,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 		secondary_preprocessed_data.append(preprocessed_data[0])
 		secondary_preprocessed_data.append(preprocessed_data[1])
 
-		var merged: bool = false
+		var _merged: bool = false
 		while i + 3 < preprocessed_data_len:
 
 			var stack_length: int = 1
@@ -162,16 +162,15 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 					return a[2] < b[2] or Vector2(a[0], a[1]).distance_squared_to(top_note_pos) < Vector2(b[0], b[1]).distance_squared_to(top_note_pos)
 				)
 				
-				var check_length: int = stack_length
+				#var check_length: int = stack_length
+				#
+				#while check_length <= i and preprocessed_data[i - check_length][2] > secondary_preprocessed_data[-4][2]:
+					#check_length += 1
 				
-				while check_length <= i and preprocessed_data[i - check_length][2] > secondary_preprocessed_data[-4][2]:
-					check_length += 1
-					if top_note[2] > 275000: print("hard")
-				
-				var notes_to_check: Array[Array] = preprocessed_data.slice(max(0, i - check_length - 4), i + 4)
+				var notes_to_check: Array[Array] = preprocessed_data.slice(max(0, top_note_i - 6), i + 6)
 
-				var cursor_position_notes: Array[Array] = secondary_preprocessed_data.slice(-check_length - 6)
-				var cursor_position_notes_end: Array[Array] = preprocessed_data.slice(i, i + 10)
+				var cursor_position_notes: Array[Array] = secondary_preprocessed_data.slice(-stack_length - 12)
+				var cursor_position_notes_end: Array[Array] = preprocessed_data.slice(i, i + 12)
 				
 				if top_note[2] > 275000: print(len(notes_to_check))
 
