@@ -178,8 +178,15 @@ func _ready() -> void:
 		autoplay_handler = AutoplayHandler.new(map,cursor)
 
 	self.multimesh = MultiMesh.new()
-
-	update_note_mesh(note_mesh)
+	
+	var custom_mesh_resource: String = SSCS.get_arbitrary_exension("user://mesh", ["obj"])
+	
+	if !custom_mesh_resource.is_empty():
+		
+		var custom_mesh: ArrayMesh = ObjParse.from_path(custom_mesh_resource)
+		update_note_mesh(custom_mesh)
+	else:
+		update_note_mesh(note_mesh)
 	self.multimesh.transform_format=MultiMesh.TRANSFORM_3D
 	self.multimesh.use_custom_data=true
 
@@ -272,6 +279,7 @@ func remove_note(note: Note) -> void:
 
 func update_note_mesh(mesh: Mesh) -> void:
 	var new_note_mesh: Mesh = mesh.duplicate()
+	RenderingServer.global_shader_parameter_set("note_z_multiplier", 1 / (mesh.get_aabb().size.inverse().z * 0.2 * SSCS.settings.note_scale))
 
 	new_note_mesh.surface_set_material(0, note_material)
 	self.multimesh.mesh=new_note_mesh

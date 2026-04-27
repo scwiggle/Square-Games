@@ -278,6 +278,10 @@ note_fade_out_end={
 "type": "float",
 "value": 0.0
 }
+note_z_multiplier={
+"type": "float",
+"value": 0.0
+}
 
 [steam]
 

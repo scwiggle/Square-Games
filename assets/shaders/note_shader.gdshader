@@ -6,6 +6,8 @@ global uniform float approach_time;
 global uniform float spawn_distance;
 global uniform float vanish_distance;
 
+global uniform float note_z_multiplier; //used to counteract
+
 global uniform float note_transparency;
 global uniform float note_begin_transparency;
 global uniform float note_end_transparency;
@@ -30,12 +32,12 @@ void vertex() {
 
 	float time_til_hit = INSTANCE_CUSTOM.a-elapsed_time;
 	float note_lerp = time_til_hit/approach_time;
-	float new_pos = spawn_distance*note_lerp;
+	float new_pos = spawn_distance * note_lerp * note_z_multiplier;
 
-	float map_in_begin = mix(note_fade_in_begin, note_fade_out_begin, float(note_lerp < note_fade_out_begin && note_lerp > note_fade_out_end));
-	float map_in_end = mix(note_fade_in_end, note_fade_out_end, float(note_lerp < note_fade_out_begin && note_lerp > note_fade_out_end));
-	float map_out_begin = mix(note_begin_transparency, note_transparency, float(note_lerp < note_fade_out_begin && note_lerp > note_fade_out_end));
-	float map_out_end = mix(note_transparency, note_end_transparency, float(note_lerp < note_fade_out_begin && note_lerp > note_fade_out_end));
+	//float map_in_begin = mix(note_fade_in_begin, note_fade_out_begin, float(note_lerp < note_fade_out_begin && note_lerp > note_fade_out_end));
+	//float map_in_end = mix(note_fade_in_end, note_fade_out_end, float(note_lerp < note_fade_out_begin && note_lerp > note_fade_out_end));
+	//float map_out_begin = mix(note_begin_transparency, note_transparency, float(note_lerp < note_fade_out_begin && note_lerp > note_fade_out_end));
+	//float map_out_end = mix(note_transparency, note_end_transparency, float(note_lerp < note_fade_out_begin && note_lerp > note_fade_out_end));
 
 	//alpha = mix(map(note_lerp, map_in_begin, map_in_end, map_out_begin, map_out_end), 1.0, float(new_pos < vanish_distance));
 
