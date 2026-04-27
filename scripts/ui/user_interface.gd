@@ -4,6 +4,6 @@ extends Control
 func _init() -> void:
 	SSCS.user_interface = self
 
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 	if !self.visible:
 		accept_event()

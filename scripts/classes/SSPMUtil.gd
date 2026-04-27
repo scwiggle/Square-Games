@@ -107,7 +107,7 @@ static func load_from_path(path: String) -> SSPM:
 	#else:
 	newdata.name=mapname
 
-	#var benchmarking_start_3: int = Time.get_ticks_usec()
+	var benchmarking_start_3: int = Time.get_ticks_usec()
 
 	if hasAudio:
 		file.seek(audioOffset)
@@ -146,12 +146,12 @@ static func load_from_path(path: String) -> SSPM:
 
 		newdata.cover=cover
 	
-	#var benchmarking_end_3: int = Time.get_ticks_usec()
+	var benchmarking_end_3: int = Time.get_ticks_usec()
 	#only reason we go to marker definitions is for ssp_note
 
 	file.seek(markersOffset)
 
-	#var benchmarking_start_1: int = Time.get_ticks_usec()
+	var benchmarking_start_1: int = Time.get_ticks_usec()
 
 	var note_data: Array[Array]
 	note_data.resize(noteCount)
@@ -188,22 +188,37 @@ static func load_from_path(path: String) -> SSPM:
 				ms
 			]
 
-	#var benchmarking_end_1: int = Time.get_ticks_usec()
-	#var benchmarking_start_2: int = Time.get_ticks_usec()
+	var benchmarking_end_1: int = Time.get_ticks_usec()
+	var benchmarking_start_2: int = Time.get_ticks_usec()
+	
+	var sorting_dict: Dictionary[int, Array]
+	var note_mses: PackedInt64Array
+	
+	for note: Array in note_data:
+		var note_t: int = note[2]
+		if sorting_dict.has(note_t):
+			sorting_dict[note_t].append(note)
+		else:
+			note_mses.append(note[2])
+			sorting_dict[note_t]=[note]
+	
+	note_mses.sort()
+	
+	var i: int = 0
+	for ms: int in note_mses:
+		for note: Array in sorting_dict[ms]:
+			note_data[i] = note
+			i += 1
 
-	note_data.sort_custom(
-		func(a: Array, b: Array) -> bool:
-			return a[2] < b[2]
-	)
-
-	#var benchmarking_end_2: int = Time.get_ticks_usec()
+	var benchmarking_end_2: int = Time.get_ticks_usec()
 
 	newdata.data_parsed=note_data
 	
 	var load_end: int = Time.get_ticks_usec()
 	
 	total_load += (load_end - load_start)/1000.0
-
+	
+	#if len(note_data) > 10000:
 	#print("Took {0} ms to load notes and {1} ms to sort and {2} ms to make cover and audio with {3} notes, total time spent loading of {4}".format([
 		#(benchmarking_end_1-benchmarking_start_1)/1000.0,
 		#(benchmarking_end_2-benchmarking_start_2)/1000.0,

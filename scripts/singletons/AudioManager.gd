@@ -5,7 +5,7 @@ var stream: AudioStream
 
 var playing: bool = false
 var elapsed: float = 0.0
-var last_update: int = 0
+#var last_update: int = 0
 var playback_speed: float = 1
 var compensation: float = 0
 var audio_began: bool = false
@@ -25,7 +25,7 @@ func _ready() -> void:
 	)
 	self.add_child(player)
 
-	compensation = AudioServer.get_time_to_next_mix() + AudioServer.get_output_latency()
+	compensation = AudioServer.get_output_latency()
 
 func set_stream(new_stream: AudioStream) -> void:
 	stream = new_stream
@@ -41,7 +41,7 @@ func play(from: float) -> void:
 		player.play(from)
 		audio_began = true
 	elapsed = from
-	last_update = Time.get_ticks_usec()
+	#last_update = Time.get_ticks_usec()
 
 func stop() -> void:
 	playing = false
@@ -57,9 +57,10 @@ func resume() -> void:
 
 func _process(_dt: float) -> void:
 	if not playing: return
-	var current_update: int = Time.get_ticks_usec()
-	elapsed += (float(current_update - last_update) / 1_000_000.0) * playback_speed
-	last_update = current_update
+	#var current_update: int = Time.get_ticks_usec()
+	#elapsed += (float(current_update - last_update) / 1_000_000.0) * playback_speed
+	elapsed = player.get_playback_position() + AudioServer.get_time_since_last_mix() - compensation
+	#last_update = current_update
 	if !audio_began and elapsed >= 0:
 		play(elapsed)
 	RenderingServer.global_shader_parameter_set("elapsed_time",elapsed)
