@@ -89,7 +89,7 @@ signal note_missed(note_id: int)
 func _init(map_arg: MapLoader.Map, is_replay: bool = false, replay_note_hit_data: PackedByteArray = [], replay_cursor_pos_data: PackedVector3Array = [], end_replay_on_end_of_data: bool = false) -> void:
 	map = map_arg
 	map_data = map.data
-	
+
 	var benchmark_start_1: int = Time.get_ticks_usec()
 
 	var max_t: int = ceil(((SSCS.settings.spawn_distance+0.1)/SSCS.settings.approach_rate)*1000) + SSCS.modifiers.hit_time
@@ -178,11 +178,11 @@ func _ready() -> void:
 		autoplay_handler = AutoplayHandler.new(map,cursor)
 
 	self.multimesh = MultiMesh.new()
-	
+
 	var custom_mesh_resource: String = SSCS.get_arbitrary_exension("user://mesh", ["obj"])
-	
+
 	if !custom_mesh_resource.is_empty():
-		
+
 		var custom_mesh: ArrayMesh = ObjParse.from_path(custom_mesh_resource)
 		update_note_mesh(custom_mesh)
 	else:
@@ -198,7 +198,7 @@ func _ready() -> void:
 	while i < max_loaded_notes:
 		note_stockpile[i] = Note.new(0, Vector2(), 0.0, multimesh, 1)
 		i += 1
-	
+
 	hit_sound_player = AudioStreamPlayer.new()
 	hit_sound_player.max_polyphony = 50
 	hit_sound_player.volume_linear = SSCS.settings.hit_sound_volume * 0.15
@@ -238,7 +238,7 @@ func spawn_note(note_id: int, pos: Vector2, t: float) -> Note:
 	var new_index: int = allocated_notes.find(0, lowest_hole)
 
 	lowest_hole = new_index
-	
+
 	note_added = maxi(note_added, new_index)
 	#if new_index > note_added:
 		#note_added = new_index
@@ -256,16 +256,16 @@ func spawn_note(note_id: int, pos: Vector2, t: float) -> Note:
 		#print("new one")
 	#else:
 	new_note.reinitialize(note_id, pos, t, new_index)
- 
+
 	return new_note
 
 func remove_note(note: Note) -> void:
 	var index:int = note.multimesh_index
-	
+
 	note_removed = maxi(note_removed, index)
 	#if index > note_removed:
 		#note_removed = index
-	
+
 	lowest_hole = mini(lowest_hole, index)
 	#if index < lowest_hole:
 		#lowest_hole = index
@@ -362,22 +362,22 @@ func _check_death() -> void:
 func _load_notes() -> void:
 	var threshold: int = ceil( (AudioManager.elapsed + approach_time) * 1000)
 	var map_data_len: int = len(map_data)
-	
+
 	while last_loaded_note_id < map_data_len:
 		var note_data: Array = map_data[last_loaded_note_id]
 		var note_t: int = note_data[2]
 		#if note_t > threshold: break
 		if note_t <= threshold:
-		
+
 			#var new_note: Note = spawn_note(last_loaded_note_id, Vector2(note_data[0], note_data[1]), note_t / 1000.0)
 			var new_index: int = allocated_notes.find(0, lowest_hole)
 
 			lowest_hole = new_index
-			
+
 			note_added = maxi(note_added, new_index)
 
 			allocated_notes[new_index] = 1
-			
+
 			var new_note: Note = note_stockpile.pop_back()
 
 			new_note.reinitialize(last_loaded_note_id, Vector2(note_data[0], note_data[1]), note_t / 1000.0, new_index)
@@ -389,7 +389,7 @@ func _load_notes() -> void:
 			break
 
 var new_notes: Array[Note] #held externally for the sake of memory allocation efficiency(?) no clue if it works
-	
+
 func remove_notes(to_remove: PackedInt32Array) -> void:
 	var to_remove_len: int = len(to_remove)
 	if to_remove[-1] == to_remove_len - 1:
@@ -415,13 +415,13 @@ func remove_notes(to_remove: PackedInt32Array) -> void:
 	var shift: int = 0
 	var i: int = 0
 	var next_check: int = to_remove[0]
-	
+
 	var note_stockpile_len: int = len(note_stockpile)
 	note_stockpile.resize(note_stockpile_len + to_remove_len)
 
 	for note: Note in notes:
 		if i == next_check:
-			
+
 			var index: int = note.multimesh_index
 
 			note_removed = maxi(note_removed, index)
@@ -430,7 +430,7 @@ func remove_notes(to_remove: PackedInt32Array) -> void:
 			allocated_notes[index]=0
 
 			multimesh.set_instance_transform(index,nan_transform)
-			
+
 			note_stockpile[note_stockpile_len + shift] = note
 			shift += 1
 			if shift < to_remove_len:
@@ -440,8 +440,8 @@ func remove_notes(to_remove: PackedInt32Array) -> void:
 		else:
 			new_notes[i - shift] = note
 		i += 1
-	
-	
+
+
 	new_notes.append_array(notes.slice(to_remove[-1] + 1))
 
 	#while i < notes_len:
@@ -449,7 +449,7 @@ func remove_notes(to_remove: PackedInt32Array) -> void:
 		#i += 1
 
 	var notes_temp: Array[Note] = notes
-	
+
 	notes = new_notes
 	new_notes = notes_temp
 
@@ -460,7 +460,7 @@ func _check_hitreg() -> void:
 
 	var to_remove: PackedInt32Array = []
 	var i: int = -1
-	
+
 	var cursor_pos: Vector2 = cursor.pos
 
 	if is_replay:
@@ -501,7 +501,7 @@ func _check_hitreg() -> void:
 					to_remove.append(i)
 				else:
 					var diff: Vector2 = (note.pos - cursor_pos).abs()
-					
+
 					if maxf(diff.x, diff.y) < hitbox_size:
 						hits += 1
 						health += 0.5
@@ -511,7 +511,7 @@ func _check_hitreg() -> void:
 						to_remove.append(i)
 			else:
 				break
-	
+
 	health = clampf(health, 0.0, 5.0)
 
 	if len(to_remove) > 0:

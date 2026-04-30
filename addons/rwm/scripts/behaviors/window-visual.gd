@@ -67,7 +67,7 @@ func _ready() -> void:
 	viewport.add_child(scene)
 
 	config = window.workspace.masterspace.config
-	
+
 	var backdrop_style: StyleBoxFlat = backdrop.get(&"theme_override_styles/panel")
 	var border_style: StyleBoxFlat = border.get(&"theme_override_styles/panel")
 	var corner_radius: float = config.get_value("styling", "window-corner-radius-pixels")

@@ -45,7 +45,7 @@ static func _catmull_rom_2(pos_0: float, pos_1: float, pos_2: float, pos_3: floa
 	return (2*u3 - 3*u2 + 1)*pos_1 + (u3 - 2*u2 + u)*m0 + (-2*u3 + 3*u2)*pos_2 + (u3 - u2)*m1
 
 static func _catmull_rom_raw(pos_0: float, pos_1: float, pos_2: float, pos_3: float, u: float, time_0: float, time_1: float, time_2: float, time_3: float) -> float:
-	const spline_alpha: float = 0.5
+	const spline_alpha: float = 0.4
 	const spline_tension: float = -1
 
 	var t01: float = max(abs(time_0 - time_1), 1) ** spline_alpha
@@ -56,14 +56,16 @@ static func _catmull_rom_raw(pos_0: float, pos_1: float, pos_2: float, pos_3: fl
 	var m1: float = (1.0 - spline_tension) * (pos_2 - pos_1 + t12 * ((pos_1 - pos_0) / t01 - (pos_2 - pos_0) / (t01 + t12)))
 	var m2: float = (1.0 - spline_tension) * (pos_2 - pos_1 + t12 * ((pos_3 - pos_2) / t23 - (pos_3 - pos_1) / (t12 + t23)))
 
-	m1 = sign(m1)*abs(m1)**1.25
-	m2 = sign(m2)*abs(m2)**1.25
+	m1 = sign(m1)*abs(m1)**1 #smoothness?
+	m2 = sign(m2)*abs(m2)**1 #smoothness?
 
 	if !(is_finite(m1) and is_finite(m2)): print("{0}, {1}, {2}".format([t01,t12,t23]))
 	if !is_finite(m1): m1 = 0
 	if !is_finite(m2): m2 = 0
 
-	return (2 * (pos_1 - pos_2) + m1 + m2)*u*u*u + (-3 * (pos_1 - pos_2) - m1 - m1 - m2)*u*u + (m1)*u + (pos_1)
+	var u2: float = u*u
+
+	return (2 * (pos_1 - pos_2) + m1 + m2)*u2*u + (-3 * (pos_1 - pos_2) - m1 - m1 - m2)*u2 + (m1)*u + (pos_1)
 
 static func _get_position(note_0: Array, note_1: Array, note_2: Array, note_3: Array, time: float) -> Vector2:
 	var segment_duration: float = note_2[2] - note_1[2]

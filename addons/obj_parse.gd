@@ -17,7 +17,7 @@ class_name ObjParse
 const PRINT_DEBUG: bool = false
 const PRINT_COMMENTS: bool = false
 const TEXTURE_KEYS: Array[String] = [
-	"map_kd", "map_disp", "disp", 
+	"map_kd", "map_disp", "disp",
 	"map_bump", "map_normal", "bump",
 	"map_ao", "map_ks"
 ]
@@ -127,7 +127,7 @@ static func _create_mtl(
 					_debug_msg("Invalid albedo/diffuse color")
 					continue
 				current_material.albedo_color = Color(
-					parts[1].to_float(), 
+					parts[1].to_float(),
 					parts[2].to_float(),
 					parts[3].to_float()
 				)
@@ -174,7 +174,7 @@ static func _get_image(mtl_filepath: String, tex_filename: String) -> Image:
 		tex_filepath = tex_filepath.strip_edges()
 	var file_type: String = tex_filepath.get_extension()
 	_debug_msg("Texture file path:", tex_filepath, "of type", file_type)
-	
+
 	var img: Image = Image.new()
 	img.load(tex_filepath)
 	return img
@@ -197,7 +197,7 @@ static func _create_obj(
 	var uvs: PackedVector2Array = PackedVector2Array([Vector2.ZERO])
 	var faces: Dictionary[String, Array] = {}
 	for mat_key: String in materials.keys(): faces[mat_key] = []
-	
+
 	# Parse
 	var lines: PackedStringArray = obj.split("\n", false)
 	for line: String in lines:
@@ -275,27 +275,27 @@ static func _create_obj(
 			_:
 				# Unsupported feature
 				pass
-	
+
 	# Skip if no faces were parsed
 	if (faces.size() == 1 && faces["_default"].is_empty()):
 		return mesh
-	
+
 	# Make tri
 	for mat_group: String in faces.keys():
 		_debug_msg(
 			"Creating surface for material", mat_group,
 			"with", str(faces[mat_group].size()), "faces"
 		)
-		
+
 		# Prepare mesh assembly
 		var st: SurfaceTool = SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
-		
+
 		# Determine material
 		if (!materials.has(mat_group)):
 			materials[mat_group] = StandardMaterial3D.new()
 		st.set_material(materials[mat_group])
-		
+
 		# Assembly
 		for face: ObjParseFace in faces[mat_group]:
 			# Vertices
@@ -316,10 +316,10 @@ static func _create_obj(
 				var uv: Vector2 = uvs[f]
 				fan_vt.append(uv)
 			st.add_triangle_fan(fan_v, fan_vt, PackedColorArray(), PackedVector2Array(), fan_vn, [])
-		
+
 		# Append to final mesh
 		mesh = st.commit(mesh)
-	
+
 	# Apply materials to surfaces
 	for k: int in mesh.get_surface_count():
 		var mat: Material = mesh.surface_get_material(k)
@@ -328,7 +328,7 @@ static func _create_obj(
 			if (materials[m] != mat): continue
 			mat_name = m
 		mesh.surface_set_name(k, mat_name)
-	
+
 	# All done!
 	return mesh
 

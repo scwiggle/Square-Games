@@ -59,7 +59,17 @@ func benchmark() -> void:
 
 func _ready() -> void:
 	pass
-	
+	var arr: PackedByteArray = [0xff, 0xff]
+
+	print(arr)
+
+	ReplayParser.write_bits(arr, 0, 9, 0b100000001)
+
+	print(arr)
+
+	print(ReplayParser.read_bits(arr, 0, 9))
+	print(0)
+
 	#var st: int = Time.get_ticks_usec()
 	#
 	#for i in range(0, 100_000):

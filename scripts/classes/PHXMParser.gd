@@ -14,7 +14,7 @@ static func get_note_count(path: String) -> int:
 	if error != Error.OK:
 		print(error)
 		return 999999
-	
+
 	var object_data: PackedByteArray = zip_reader.read_file("objects.phxmo")
 
 	return object_data.decode_u32(4)
@@ -39,12 +39,12 @@ static func load_from_path(path: String) -> PHXM:
 				new_map.audio = AudioStreamWAV.load_from_buffer(audio_buffer)
 			"ogg":
 				new_map.audio = AudioStreamOggVorbis.load_from_buffer(audio_buffer)
-	
+
 	if metadata.HasCover:
 		var cover: Image = Image.new()
-		
+
 		cover.load_png_from_buffer(zip_reader.read_file("cover.png"))
-		
+
 		new_map.cover = cover
 
 	var object_data: PackedByteArray = zip_reader.read_file("objects.phxmo")

@@ -30,9 +30,9 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 	self.cursor = cursor_arg
 
 	var i: int = 0
-	
+
 	var timing_start: int = Time.get_ticks_usec()
-	
+
 	var notes: Array[Array] = map.data.duplicate(true)
 	var notes_len: int = len(notes)
 
@@ -131,7 +131,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 				if top_note[2] > 275000: print(stack_length)
 
 				var end_note: Array = preprocessed_data[i-1]
- 
+
 				var valid: bool = false
 				var valid_test: Array
 
@@ -155,23 +155,23 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 								top_note[1] + offset.y,
 								lerp(top_note[2], end_note[2], i2 / (test_count - 1.0)),
 							])
-				
+
 				var top_note_pos: Vector2 = Vector2(top_note[0], top_note[1])
-				
+
 				tests.sort_custom(func(a: Array, b: Array) -> bool:
 					return a[2] < b[2] or Vector2(a[0], a[1]).distance_squared_to(top_note_pos) < Vector2(b[0], b[1]).distance_squared_to(top_note_pos)
 				)
-				
+
 				#var check_length: int = stack_length
 				#
 				#while check_length <= i and preprocessed_data[i - check_length][2] > secondary_preprocessed_data[-4][2]:
 					#check_length += 1
-				
+
 				var notes_to_check: Array[Array] = preprocessed_data.slice(max(0, top_note_i - 6), i + 6)
 
 				var cursor_position_notes: Array[Array] = secondary_preprocessed_data.slice(-stack_length - 12)
 				var cursor_position_notes_end: Array[Array] = preprocessed_data.slice(i, i + 12)
-				
+
 				if top_note[2] > 275000: print(len(notes_to_check))
 
 				for test: Array in tests:
@@ -294,9 +294,9 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 		i += 1
 
 	processed_data.append(preprocessed_data[-1])
-	
+
 	var timing_end: int = Time.get_ticks_usec()
-	
+
 	print((timing_end - timing_start) / 1000.0)
 
 	#processed_data = secondary_preprocessed_data
@@ -314,13 +314,13 @@ func _get_cursor_position_from_notes_and_elapsed(note_data: Array, elapsed: int)
 			break
 		else:
 			temp_last_loaded_note+=1
-	
+
 	if temp_last_loaded_note == 0:
 		if debug_prints_enabled: print("WOOT WOOT WOOT")
-	
+
 	if temp_last_loaded_note + 2 > len(note_data) - 1:
 		if debug_prints_enabled: print("WOOT WOOT WOOT 2")
-	
+
 	var note_0: Array = note_data[max(temp_last_loaded_note - 1,0)]
 	var note_1: Array = note_data[temp_last_loaded_note]
 	var note_2: Array = note_data[min(temp_last_loaded_note + 1, len(note_data) - 1)]

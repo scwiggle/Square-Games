@@ -9,7 +9,7 @@ var playback_speed: float = 1
 var compensation: float = 0
 var audio_began: bool = false
 
-var last_update: int 
+var last_update: int
 
 signal ended
 
@@ -59,14 +59,14 @@ func resume() -> void:
 func _process(_dt: float) -> void:
 	if not playing: return
 	var current_update: int = Time.get_ticks_usec()
-	
+
 	if audio_began:
 		elapsed = player.get_playback_position() + AudioServer.get_time_since_last_mix() - compensation
 	else:
 		elapsed += (float(current_update - last_update) / 1_000_000.0) * playback_speed
-	
+
 	last_update = current_update
-	
+
 	if !audio_began and elapsed >= 0:
 		play(elapsed)
 	RenderingServer.global_shader_parameter_set("elapsed_time",elapsed)

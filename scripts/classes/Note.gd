@@ -50,6 +50,6 @@ func reinitialize(note_id_arg: int, pos_arg: Vector2, t_arg: float, multimesh_in
 	color = color_set[note_id % color_set_len]
 
 	note_transform.origin = Vector3(pos.x,pos.y,grid_distance)
-	
+
 	multimesh.set_instance_transform(multimesh_index, note_transform)
 	multimesh.set_instance_custom_data(multimesh_index, Color(color,t))

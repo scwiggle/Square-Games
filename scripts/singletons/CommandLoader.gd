@@ -121,7 +121,7 @@ func _ready() -> void:
 	register_command(Command.new(func(map_name: String = "", start_from: String = "0") -> void:
 		print("play ran")
 		print("load map %s" % map_name)
-		
+
 		var map:MapLoader.Map
 		map = SSCS.load_map_from_name(map_name)
 
@@ -141,7 +141,7 @@ func _ready() -> void:
 			start_from_time = map.data[0][2]/1000.0
 
 		print("num notes: ", str(len(map.data)))
-		
+
 		var game_handler: GameHandler = GameHandler.new(map)
 		SSCS.game_handler=game_handler
 
@@ -155,17 +155,17 @@ func _ready() -> void:
 		SSCS.user_interface.visible = false
 
 		await game_handler.ended
-		
+
 		SSCS.user_interface.visible = true
 		print("map ended")
 
 		game_handler.queue_free()
 
 	,["play","playmap"], 0))
-	
+
 	register_command(Command.new(func(start_from: String = "0") -> void:
 		print("play ran")
-		
+
 		var map:MapLoader.Map = SSCS.selected_map
 
 		var start_from_time: float = 0
@@ -176,7 +176,7 @@ func _ready() -> void:
 			start_from_time = map.data[0][2]/1000.0
 
 		print("num notes: ", str(len(map.data)))
-		
+
 		var game_handler: GameHandler = GameHandler.new(map)
 		SSCS.game_handler=game_handler
 
@@ -190,7 +190,7 @@ func _ready() -> void:
 		SSCS.user_interface.visible = false
 
 		await game_handler.ended
-		
+
 		SSCS.user_interface.visible = true
 		print("map ended")
 
@@ -369,18 +369,18 @@ func _ready() -> void:
 		if user_id != -1 and user_id != NewSteamHandler.local_steam_id:
 			Steam.setLobbyOwner(NewSteamHandler.current_lobby_id, user_id)
 	,["nso"]))
-	
+
 	register_command(Command.new(func() -> void:
 
 		var maps_path: String
 		match OS.get_name().to_lower():
 			"linux": maps_path = "/home/%s/.local/share/SoundSpacePlus/maps" % OS.get_environment("USER")
 			"windows": maps_path = "%s/SoundSpacePlus/maps" % OS.get_environment("appdata").replace("\\","/")
-		
+
 		for map: String in DirAccess.get_files_at(maps_path):
 			DirAccess.copy_absolute(maps_path + "/%s" % map, "user://rhythiamaps/%s" % map)
 	,["importmaps"]))
-	
+
 	register_command(Command.new(func() -> void:
 		SSCS.load_unloaded_maps()
 	,["loadunloadedmaps"]))

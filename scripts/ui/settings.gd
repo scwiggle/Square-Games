@@ -13,14 +13,14 @@ func add_tab(tab_name: String) -> void:
 	var new_tab: ScrollContainer = settings_tab_scene.instantiate()
 	new_tab.name = tab_name
 	$"MarginContainer/TabContainer".add_child(new_tab)
-	
+
 	tabs[tab_name] = new_tab
 
 func add_setting(tab_name: String, setting_name: String, setting_type: String, on_changed: Callable, default_value: Variant) -> void:
 	var new_setting: HBoxContainer = setting_scenes[setting_type].instantiate()
-	
+
 	new_setting.get_node("RichTextLabel").text = setting_name
-	
+
 	#I sincerely apologize for any damages caused by the code following this comment.
 	match setting_type:
 		"bool":
@@ -29,7 +29,7 @@ func add_setting(tab_name: String, setting_name: String, setting_type: String, o
 		"string":
 			new_setting.get_node("LineEdit").text = var_to_str(default_value)
 			new_setting.get_node("LineEdit").text_submitted.connect(on_changed.bind(new_setting.get_node("LineEdit")))
-	
+
 	tabs[tab_name].get_node("MarginContainer/VBoxContainer").add_child(new_setting)
 
 func default_bool_callback(value: bool, _input: CheckBox, setting_name: String) -> void:
@@ -133,7 +133,7 @@ var settings_metadata: Dictionary = {
 			"type" = "string",
 			"callback" = default_string_callback.bind("note_fade_in_end")
 		},
-		
+
 		"note_end_transparency" = {
 			"name" = "Note Fade Out Transparency",
 			"type" = "string",
@@ -152,17 +152,17 @@ var settings_metadata: Dictionary = {
 		"hud_scale" = {
 			"name" = "Hud Scale",
 			"type" = "string",
-			"callback" = default_string_callback.bind("note_fade_out_end")
+			"callback" = default_string_callback.bind("hud_scale")
 		},
 		"cursor_scale" = {
 			"name" = "Cursor Scale",
 			"type" = "string",
-			"callback" = default_string_callback.bind("note_fade_out_end")
+			"callback" = default_string_callback.bind("cursor_scale")
 		},
 		"note_scale" = {
 			"name" = "Note Scale",
 			"type" = "string",
-			"callback" = default_string_callback.bind("note_fade_out_end")
+			"callback" = default_string_callback.bind("note_scale")
 		},
 	},
 	"Display" = {
@@ -197,5 +197,5 @@ func _ready() -> void:
 		var tab_data: Dictionary = settings_metadata[tab]
 		for setting: String in tab_data:
 			var setting_data: Dictionary = tab_data[setting]
-			
+
 			add_setting(tab, setting_data.name, setting_data.type, setting_data.callback, SSCS.settings[setting])

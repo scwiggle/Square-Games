@@ -31,13 +31,13 @@ static func get_note_count(path: String) -> int:
 
 	if file==null:
 		return 99999999
-	
+
 	file.seek(0x70) #just to make sure
 	var _markersOffset:int = file.get_64()
 	var markersLength:int = file.get_64()
-	
+
 	return markersLength
-	
+
 static func load_from_path(path: String) -> SSPM:
 	var load_start: int = Time.get_ticks_usec()
 	var newdata:SSPM = SSPM.new()
@@ -145,7 +145,7 @@ static func load_from_path(path: String) -> SSPM:
 				print(char(v))
 
 		newdata.cover=cover
-	
+
 	var benchmarking_end_3: int = Time.get_ticks_usec()
 	#only reason we go to marker definitions is for ssp_note
 
@@ -190,10 +190,10 @@ static func load_from_path(path: String) -> SSPM:
 
 	var benchmarking_end_1: int = Time.get_ticks_usec()
 	var benchmarking_start_2: int = Time.get_ticks_usec()
-	
+
 	var sorting_dict: Dictionary[int, Array]
 	var note_mses: PackedInt64Array
-	
+
 	for note: Array in note_data:
 		var note_t: int = note[2]
 		if sorting_dict.has(note_t):
@@ -201,9 +201,9 @@ static func load_from_path(path: String) -> SSPM:
 		else:
 			note_mses.append(note[2])
 			sorting_dict[note_t]=[note]
-	
+
 	note_mses.sort()
-	
+
 	var i: int = 0
 	for ms: int in note_mses:
 		for note: Array in sorting_dict[ms]:
@@ -213,11 +213,11 @@ static func load_from_path(path: String) -> SSPM:
 	var benchmarking_end_2: int = Time.get_ticks_usec()
 
 	newdata.data_parsed=note_data
-	
+
 	var load_end: int = Time.get_ticks_usec()
-	
+
 	total_load += (load_end - load_start)/1000.0
-	
+
 	#if len(note_data) > 10000:
 	#print("Took {0} ms to load notes and {1} ms to sort and {2} ms to make cover and audio with {3} notes, total time spent loading of {4}".format([
 		#(benchmarking_end_1-benchmarking_start_1)/1000.0,
