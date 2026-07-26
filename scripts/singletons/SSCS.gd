@@ -41,7 +41,7 @@ class Settings:
 	var auto_spectate: bool = true
 
 	var vfx_detail_level: VfxDetailLevel = VfxDetailLevel.VFX_DETAIL_LEVEL_MAX
-	var space_id: StringName = &"void"
+	var space_id: StringName = &"stars"
 
 	var glow_enabled: bool = false
 	var glow_strength: float = 2

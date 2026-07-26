@@ -162,10 +162,6 @@ func _ready() -> void:
 	RenderingServer.global_shader_parameter_set("note_fade_out_begin",SSCS.settings.note_fade_out_begin)
 	RenderingServer.global_shader_parameter_set("note_fade_out_end",SSCS.settings.note_fade_out_end)
 
-	camera.environment.glow_enabled = SSCS.settings.glow_enabled
-	camera.environment.glow_strength = SSCS.settings.glow_strength
-	camera.environment.glow_bloom = SSCS.settings.glow_bloom
-
 	cursor = cursor_base.instantiate()
 	if is_replay or autoplay:
 		cursor.accepts_input = false
@@ -175,8 +171,12 @@ func _ready() -> void:
 	self.add_child(hud)
 
 	var space: Space = Space.new("%s/%s" % [SSCS.SPACES_PATH.trim_suffix("/"), SSCS.settings.space_id])
-	add_child(space)
-	print("loaded space %s from %s" % [space.meta.name, space.scene_path])
+	self.add_child(space)
+
+	camera.environment = space.environment.duplicate(true)
+	camera.environment.glow_enabled = SSCS.settings.glow_enabled
+	camera.environment.glow_strength = SSCS.settings.glow_strength
+	camera.environment.glow_bloom = SSCS.settings.glow_bloom
 
 	if autoplay:
 		autoplay_handler = AutoplayHandler.new(map,cursor)

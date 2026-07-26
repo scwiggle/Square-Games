@@ -1,0 +1,72 @@
+[gd_scene load_steps=11 format=3 uid="uid://i5bmtpcjnoua"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ykryw"]
+sky_top_color = Color(0, 0, 0, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+ground_bottom_color = Color(0.06433167, 0.051700003, 0.11, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+ground_curve = 0.25
+
+[sub_resource type="Sky" id="Sky_85154"]
+sky_material = SubResource("ProceduralSkyMaterial_ykryw")
+
+[sub_resource type="Environment" id="Environment_x7k5a"]
+background_mode = 2
+sky = SubResource("Sky_85154")
+
+[sub_resource type="Curve" id="Curve_ykryw"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_85154"]
+curve = SubResource("Curve_ykryw")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ykryw"]
+emission_shape = 3
+emission_box_extents = Vector3(64, 64, 64)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.099999994
+alpha_curve = SubResource("CurveTexture_85154")
+
+[sub_resource type="Gradient" id="Gradient_x7k5a"]
+interpolation_mode = 1
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_y6dux"]
+gradient = SubResource("Gradient_x7k5a")
+width = 16
+height = 16
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+metadata/_snap_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6rd5g"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("GradientTexture2D_y6dux")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+distance_fade_mode = 1
+distance_fade_min_distance = 4.0
+distance_fade_max_distance = 32.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_85154"]
+material = SubResource("StandardMaterial3D_6rd5g")
+
+[node name="Space" type="Node3D"]
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_x7k5a")
+
+[node name="Stars" type="GPUParticles3D" parent="."]
+amount = 1024
+lifetime = 4.0
+preprocess = 32.0
+process_material = SubResource("ParticleProcessMaterial_ykryw")
+draw_pass_1 = SubResource("QuadMesh_85154")

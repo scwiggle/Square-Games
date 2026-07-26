@@ -1,16 +1,6 @@
 extends Node3D
 class_name Hud
 
-const info_right_base: String = """
-HITS
-{0}
-
-
-
-
-MISSES
-{1}"""
-
 @onready var viewport_right: SubViewport = %InfoRightViewport
 @onready var text_right: RichTextLabel = %InfoRightText
 
@@ -19,7 +9,11 @@ MISSES
 @onready var viewport_bottom: SubViewport = %InfoBottomViewport
 @onready var health_bar: ProgressBar = %HealthBar
 
+var info_right_base: String
+
 func _ready() -> void:
+	info_right_base = text_right.text
+
 	self.position=Vector3(0,0,SSCS.settings.grid_distance)
 	self.scale = Vector3(1, 1, 1) * SSCS.settings.hud_scale
 

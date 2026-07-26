@@ -8,6 +8,7 @@ class SpaceMeta:
 
 var meta: SpaceMeta = SpaceMeta.new()
 var scene_path: String
+var environment: Environment
 
 func _init(directory: String) -> void:
 	var meta_file: ConfigFile = ConfigFile.new()
@@ -24,4 +25,5 @@ func _init(directory: String) -> void:
 func _ready() -> void:
 	var space_scene: PackedScene = load(scene_path)
 	var instantiated_space: Node3D = space_scene.instantiate()
+	environment = instantiated_space.get_node(^"Environment").environment
 	add_child(instantiated_space)

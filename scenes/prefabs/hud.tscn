@@ -157,15 +157,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_f20qw")
-text = " 
-HITS
-0
- 
- 
- 
+bbcode_enabled = true
+text = "
 
-MISSES
-0"
+
+[font_size=12]HITS
+[font_size=24]{0}
+ 
+ 
+[font_size=12]MISSES
+[font_size=24]{1}"
 scroll_active = false
 horizontal_alignment = 1
 
