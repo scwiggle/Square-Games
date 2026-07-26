@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5yg6n3ojies5"]
+
+[ext_resource type="Script" uid="uid://btjp6imem8vvf" path="res://scripts/classes/VfxHelper.gd" id="1_biwub"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_biwub"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 0.16470589)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_biwub"]
+top_radius = 0.0
+height = 1.0
+radial_segments = 4
+
+[node name="VfxHelper" type="Node3D"]
+script = ExtResource("1_biwub")
+
+[node name="VelocityRotated" type="Node3D" parent="."]
+
+[node name="Debug" type="MeshInstance3D" parent="VelocityRotated"]
+transform = Transform3D(-0.17677669, 1.8655001e-08, -0.17677669, 0.17677669, -7.727155e-09, -0.17677669, -1.8655001e-08, -0.25, -7.727155e-09, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_biwub")
+mesh = SubResource("CylinderMesh_biwub")

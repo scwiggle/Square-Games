@@ -2,6 +2,14 @@ extends Node
 
 ## any setting which is related to track position is on a scale of 0-1 where 0 is hitting the grid and 1 is freshly spawned
 
+enum VfxDetailLevel {
+	VFX_DETAIL_LEVEL_NONE,
+	VFX_DETAIL_LEVEL_MINIMAL,
+	VFX_DETAIL_LEVEL_MAX
+}
+
+const SPACES_PATH = "res://scenes/spaces"
+
 class Settings:
 	var approach_rate: float = 50.0
 	var spawn_distance: float = 25.0
@@ -31,6 +39,9 @@ class Settings:
 	var absolute_input: bool = false
 
 	var auto_spectate: bool = true
+
+	var vfx_detail_level: VfxDetailLevel = VfxDetailLevel.VFX_DETAIL_LEVEL_MAX
+	var space_id: StringName = &"void"
 
 	var glow_enabled: bool = false
 	var glow_strength: float = 2

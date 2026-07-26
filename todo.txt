@@ -1,19 +1,15 @@
 chores;
-get a real user interface
-add hit/miss effects
+finish user interface
+add miss effects
 add cursor trail
-add replays
 
 future chores;
-replace NoteDataMinimal with arrays since they're faster
-add spin
 get a better hud
 
-
 decisions;
-allow custom note mesh?
-add vr support?
-add ingame map editor?
+allow custom note mesh? (leaning yes)
+add vr support? (leaning yes)
+add ingame map editor? (leaning maybe)
 
 ideas;
 new terminal autocomplete will cycle with tab and confirm with space

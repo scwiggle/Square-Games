@@ -3,6 +3,7 @@ class_name Cursor
 
 var pos: Vector2 = Vector2(0, 0)
 var pos_world: Vector3 = Vector3(0, 0, grid_distance)
+var pos_world_prev: Vector3 = pos_world
 var camera: Camera3D
 
 const GRID_MAX: float = (3 - 0.28) / 2.0 #(grid size - cursor size) / 2
@@ -32,6 +33,7 @@ var camera_push_forward: float = 1.0 / 4.0 if SSCS.settings.sound_space_accurate
 var previous_position: Vector2 = screen_center
 
 func update_position() -> void:
+	pos_world_prev = pos_world
 	pos_world.x = pos.x
 	pos_world.y = pos.y
 	self.position = pos_world
@@ -44,6 +46,10 @@ func update_position() -> void:
 
 	if !camera.position.is_finite():
 		print("AWOOGA")
+
+
+func get_velocity_world() -> Vector3:
+	return pos_world - pos_world_prev
 
 
 func _ready() -> void:
@@ -85,6 +91,8 @@ func _input(event: InputEvent) -> void:
 
 			var intersection: Vector3 = Vector3() if intersection_raw == null else intersection_raw
 
+			pos_world_prev = pos_world
+
 			pos_world = intersection.clamp(Vector3(-GRID_MAX, -GRID_MAX, -INF), Vector3(GRID_MAX, GRID_MAX, INF))
 
 			pos.x = pos_world.x
@@ -112,6 +120,8 @@ func _input(event: InputEvent) -> void:
 			else:
 				pos -= event.relative * inverted_pixels_per_grid_unit
 				pos = pos.clampf(-GRID_MAX, GRID_MAX)
+
+			pos_world_prev = pos_world
 
 			pos_world.x = pos.x
 			pos_world.y = pos.y

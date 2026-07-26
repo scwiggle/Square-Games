@@ -75,12 +75,12 @@ func start_lobby(from: float = 0) -> void:
 
 	var game_handler: GameHandler = GameHandler.new(selected_map)
 
-	game_handler.note_hit.connect(func(note_id: int) -> void:
-		local_note_hit_data[note_id] = true
+	game_handler.note_hit.connect(func(note: Note) -> void:
+		local_note_hit_data[note.note_id] = true
 	)
 
-	game_handler.note_missed.connect(func(note_id: int) -> void:
-		local_note_hit_data[note_id] = false
+	game_handler.note_missed.connect(func(note: Note) -> void:
+		local_note_hit_data[note.note_id] = false
 	)
 
 	lobby_start = Time.get_ticks_msec()

@@ -174,6 +174,10 @@ func _ready() -> void:
 	hud = hud_base.instantiate()
 	self.add_child(hud)
 
+	var space: Space = Space.new("%s/%s" % [SSCS.SPACES_PATH.trim_suffix("/"), SSCS.settings.space_id])
+	add_child(space)
+	print("loaded space %s from %s" % [space.meta.name, space.scene_path])
+
 	if autoplay:
 		autoplay_handler = AutoplayHandler.new(map,cursor)
 
@@ -300,14 +304,14 @@ func play(from: float) -> void:
 	AudioManager.play(from - 1 * speed_multiplier)
 
 	if record_replays and !is_replay and !autoplay:
-		note_hit.connect(func(note_id: int) -> void:
-			recorded_replay_note_hit_data.resize(max(len(recorded_replay_note_hit_data), note_id + 1))
-			recorded_replay_note_hit_data[note_id] = 1
+		note_hit.connect(func(note: Note) -> void:
+			recorded_replay_note_hit_data.resize(max(len(recorded_replay_note_hit_data), note.note_id + 1))
+			recorded_replay_note_hit_data[note.note_id] = 1
 		)
 
-		note_missed.connect(func(note_id: int) -> void:
-			recorded_replay_note_hit_data.resize(max(len(recorded_replay_note_hit_data), note_id + 1))
-			recorded_replay_note_hit_data[note_id] = 0
+		note_missed.connect(func(note: Note) -> void:
+			recorded_replay_note_hit_data.resize(max(len(recorded_replay_note_hit_data), note.note_id + 1))
+			recorded_replay_note_hit_data[note.note_id] = 0
 		)
 
 		ended.connect(func() -> void:
@@ -475,14 +479,14 @@ func _check_hitreg() -> void:
 						misses += 1
 						health = health - 1
 						if use_miss_sound: miss_sound_player.play(0)
-						note_missed.emit(note.note_id)
+						note_missed.emit(note)
 
 						to_remove.append(i)
 					else:
 						hits += 1
 						health = health + 0.5
 						if use_hit_sound: hit_sound_player.play(0)
-						note_hit.emit(note.note_id)
+						note_hit.emit(note)
 
 						to_remove.append(i)
 			else:
@@ -496,7 +500,7 @@ func _check_hitreg() -> void:
 					misses += 1
 					health -= 1.0
 					if use_miss_sound: miss_sound_player.play(0)
-					note_missed.emit(note.note_id)
+					note_missed.emit(note)
 
 					to_remove.append(i)
 				else:
@@ -506,7 +510,7 @@ func _check_hitreg() -> void:
 						hits += 1
 						health += 0.5
 						if use_hit_sound: hit_sound_player.play(0)
-						note_hit.emit(note.note_id)
+						note_hit.emit(note)
 
 						to_remove.append(i)
 			else:

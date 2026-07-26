@@ -1,7 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://dahe8rudiub87"]
+[gd_scene load_steps=13 format=3 uid="uid://dahe8rudiub87"]
 
 [ext_resource type="Script" uid="uid://cwtqd0wplij0p" path="res://scripts/classes/Hud.gd" id="1_eo3kg"]
 [ext_resource type="FontFile" uid="uid://cda1luwsuw12j" path="res://assets/fonts/Comfortaa-VariableFont_wght.ttf" id="2_ijk2n"]
+[ext_resource type="PackedScene" uid="uid://c5yg6n3ojies5" path="res://scenes/prefabs/vfx_helper.tscn" id="3_f20qw"]
+[ext_resource type="PackedScene" uid="uid://2em1uc55t7wo" path="res://scenes/prefabs/vfx_manager.tscn" id="4_jxby8"]
 
 [sub_resource type="Gradient" id="Gradient_eo3kg"]
 interpolation_mode = 1
@@ -21,7 +23,7 @@ viewport_path = NodePath("InfoLeft/InfoLeftViewport")
 viewport_path = NodePath("InfoBottom/InfoBottomViewport")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ijk2n"]
-bg_color = Color(0.196078, 1, 0.196078, 1)
+bg_color = Color(0.19607843, 1, 0.60784316, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -166,3 +168,8 @@ MISSES
 0"
 scroll_active = false
 horizontal_alignment = 1
+
+[node name="VfxHelper" parent="." instance=ExtResource("3_f20qw")]
+
+[node name="VfxManager" parent="." node_paths=PackedStringArray("vfx_helper") instance=ExtResource("4_jxby8")]
+vfx_helper = NodePath("../VfxHelper")
