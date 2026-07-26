@@ -77,8 +77,6 @@ class Settings:
 
 	var sound_space_accurate_camera: bool = false
 
-
-
 class Modifiers:
 	var hit_time: float = 45.0
 	var hitbox_size: float = (0.875 + 0.2625)/2
@@ -113,6 +111,8 @@ var client_lobby: ClientLobby
 
 var user_interface: UserInterface
 
+var is_debugging: bool = false
+
 var setting_parse_overrides: Dictionary[String,Callable] = {
 	color_set = func(value: String) -> Array:
 		var new_value: Array[Color] = []
@@ -128,6 +128,9 @@ var modifier_parse_overrides: Dictionary[String,Callable] = {
 			colorset.append(Color.from_string(color, Color.WHITE))
 		return colorset
 }
+
+static func print_debug(string: String) -> void:
+	if SSCS.is_debugging: print(string)
 
 func set_setting(setting: String, value: Variant, generic: bool = false) -> bool:
 	var cur_value: Variant = settings.get(setting)
