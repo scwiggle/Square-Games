@@ -9,7 +9,7 @@ class_name Hud
 @onready var viewport_bottom: SubViewport = %InfoBottomViewport
 @onready var health_bar: ProgressBar = %HealthBar
 
-const HEALTH_BAR_TWEEN_DURATION_SEC: float = 1.0
+const HEALTH_BAR_TWEEN_DURATION_SEC: float = 0.5
 
 var info_right_base: String
 var health_bar_tween: Tween
@@ -28,9 +28,8 @@ func update_info_right(hits: int, misses: int) -> void:
 func update_info_bottom(health: float) -> void:
 	if health_bar_tween: health_bar_tween.kill()
 	health_bar_tween = health_bar.create_tween()
-	health_bar_tween.set_trans(
-		Tween.TRANS_EXPO
-	)
+	health_bar_tween.set_ease(Tween.EASE_OUT)
+	health_bar_tween.set_trans(Tween.TRANS_EXPO)
 	health_bar_tween.tween_property(
 		health_bar,
 		^"value",
