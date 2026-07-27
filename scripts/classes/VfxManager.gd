@@ -29,4 +29,5 @@ func _ready() -> void:
 	game_handler = SSCS.game_handler
 	cursor = game_handler.cursor
 
-	game_handler.note_hit.connect(_on_note_hit)
+	if SSCS.settings.vfx_detail_level > 0:
+		game_handler.note_hit.connect(_on_note_hit)
