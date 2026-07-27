@@ -17,6 +17,8 @@ func _ready() -> void:
 	self.position=Vector3(0,0,SSCS.settings.grid_distance)
 	self.scale = Vector3(1, 1, 1) * SSCS.settings.hud_scale
 
+	update_info_right(0, 0)
+
 func update_info_right(hits: int, misses: int) -> void:
 	text_right.text = info_right_base.format([hits,misses])
 	#viewport_right.render_target_clear_mode = SubViewport.CLEAR_MODE_ONCE
