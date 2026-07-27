@@ -173,7 +173,7 @@ func _ready() -> void:
 	var space: Space = Space.new("%s/%s" % [SSCS.SPACES_PATH.trim_suffix("/"), SSCS.settings.space_id])
 	self.add_child(space)
 
-	camera.environment = space.environment.duplicate(true)
+	camera.environment = space.environment
 	camera.environment.glow_enabled = SSCS.settings.glow_enabled
 	camera.environment.glow_strength = SSCS.settings.glow_strength
 	camera.environment.glow_bloom = SSCS.settings.glow_bloom
