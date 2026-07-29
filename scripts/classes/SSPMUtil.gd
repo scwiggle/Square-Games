@@ -165,7 +165,7 @@ static func load_from_path(path: String) -> SSPM:
 		#var mtype:int = file.get_8() #skip marker type, only marker type thats ever used is ssp_note
 
 		var isQuantum: int = file.get_16()
-		var final_ms: int = ms if newdata.override.data_offset_msec == 0 else ms + (SSCS.modifiers.speed / newdata.override.data_offset_msec)
+		var final_ms: int = ms if newdata.override.data_offset_msec == 0 else ms + int(SSCS.modifiers.speed / newdata.override.data_offset_msec)
 
 		if isQuantum==0:
 			#var new_note_data: Array = [

@@ -60,7 +60,7 @@ static func load_from_path(path: String) -> PHXM:
 
 	for i: int in range(0, note_count):
 		var ms: int = object_data.decode_u32(cursor); cursor += 4
-		var final_ms: int = ms if new_map.override.data_offset_msec == 0 else ms + (SSCS.modifiers.speed / new_map.override.data_offset_msec)
+		var final_ms: int = ms if new_map.override.data_offset_msec == 0 else ms + int(SSCS.modifiers.speed / new_map.override.data_offset_msec)
 
 		var quantum: bool = object_data.decode_u8(cursor) > 0; cursor += 1
 
