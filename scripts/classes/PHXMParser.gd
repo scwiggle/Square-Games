@@ -60,17 +60,18 @@ static func load_from_path(path: String) -> PHXM:
 
 	for i: int in range(0, note_count):
 		var ms: int = object_data.decode_u32(cursor); cursor += 4
+		var final_ms: int = ms if new_map.override.data_offset_msec == 0 else ms + (SSCS.modifiers.speed / new_map.override.data_offset_msec)
 
 		var quantum: bool = object_data.decode_u8(cursor) > 0; cursor += 1
 
 		if quantum:
 			var x: float = -object_data.decode_float(cursor); cursor += 4
 			var y: float = object_data.decode_float(cursor); cursor += 4
-			note_data.append([x, y, ms + (SSCS.modifiers.speed / new_map.override.data_offset_msec)])
+			note_data.append([x, y, final_ms])
 		else:
 			var x: float = 1 - object_data.decode_u8(cursor); cursor += 1
 			var y: float = object_data.decode_u8(cursor) - 1; cursor += 1
-			note_data.append([x, y, ms + (SSCS.modifiers.speed / new_map.override.data_offset_msec)])
+			note_data.append([x, y, final_ms])
 
 	note_data.sort_custom(
 		func(a: Array, b: Array) -> bool:
