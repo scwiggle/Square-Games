@@ -129,8 +129,8 @@ var modifier_parse_overrides: Dictionary[String,Callable] = {
 		return colorset
 }
 
-static func print_debug(string: String) -> void:
-	if SSCS.is_debugging: print(string)
+static func print_debug(to_print: Variant) -> void:
+	if SSCS.is_debugging: print(str(to_print))
 
 func set_setting(setting: String, value: Variant, generic: bool = false) -> bool:
 	var cur_value: Variant = settings.get(setting)
