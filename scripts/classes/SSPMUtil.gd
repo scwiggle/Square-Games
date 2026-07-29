@@ -23,6 +23,7 @@ class SSPM:
 	var mapper: String
 	var difficulty: String
 	var data_parsed: Array[Array]
+	var override: MapOverride
 
 static var total_load: float = 0
 
@@ -145,6 +146,8 @@ static func load_from_path(path: String) -> SSPM:
 				print(char(v))
 
 		newdata.cover=cover
+	
+	newdata.override = MapOverride.get_from_path(path)
 
 	var benchmarking_end_3: int = Time.get_ticks_usec()
 	#only reason we go to marker definitions is for ssp_note
@@ -173,7 +176,7 @@ static func load_from_path(path: String) -> SSPM:
 			note_data[i] = [
 				1.0 - file.get_8(),
 				1.0 - file.get_8(),
-				ms
+				ms + (SSCS.modifiers.speed / newdata.override.data_offset_msec)
 			]
 		else:
 			#var new_note_data: Array = [
@@ -185,7 +188,7 @@ static func load_from_path(path: String) -> SSPM:
 			note_data[i] = [
 				1.0 - file.get_float(),
 				1.0 - file.get_float(),
-				ms
+				ms + (SSCS.modifiers.speed / newdata.override.data_offset_msec)
 			]
 
 	var benchmarking_end_1: int = Time.get_ticks_usec()

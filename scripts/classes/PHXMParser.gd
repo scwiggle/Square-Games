@@ -7,6 +7,7 @@ class PHXM:
 	var data_parsed: Array[Array]
 	var metadata: Dictionary
 	var cover: Image
+	var override: MapOverride
 
 static func get_note_count(path: String) -> int:
 	var zip_reader: ZIPReader = ZIPReader.new()
@@ -27,6 +28,7 @@ static func load_from_path(path: String) -> PHXM:
 
 	var metadata: Dictionary = JSON.parse_string(zip_reader.read_file("metadata.json").get_string_from_utf8())
 	new_map.metadata = metadata
+	new_map.override = MapOverride.get_from_path(path)
 
 	if metadata.HasAudio:
 		var audio_extension: String = metadata.AudioExt
@@ -64,11 +66,11 @@ static func load_from_path(path: String) -> PHXM:
 		if quantum:
 			var x: float = -object_data.decode_float(cursor); cursor += 4
 			var y: float = object_data.decode_float(cursor); cursor += 4
-			note_data.append([x, y, ms])
+			note_data.append([x, y, ms + (SSCS.modifiers.speed / new_map.override.data_offset_msec)])
 		else:
 			var x: float = 1 - object_data.decode_u8(cursor); cursor += 1
 			var y: float = object_data.decode_u8(cursor) - 1; cursor += 1
-			note_data.append([x, y, ms])
+			note_data.append([x, y, ms + (SSCS.modifiers.speed / new_map.override.data_offset_msec)])
 
 	note_data.sort_custom(
 		func(a: Array, b: Array) -> bool:

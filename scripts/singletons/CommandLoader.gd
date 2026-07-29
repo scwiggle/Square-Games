@@ -141,6 +141,7 @@ func _ready() -> void:
 			start_from_time = map.data[0][2]/1000.0
 
 		print("num notes: ", str(len(map.data)))
+		print("map data offset override at %s msec" % map.override.data_offset_msec)
 
 		var game_handler: GameHandler = GameHandler.new(map)
 		SSCS.game_handler=game_handler

@@ -84,7 +84,7 @@ static func from_path_sspm(path: String) -> Map: #path to a .sspm file
 	var new_map: Map = Map.new()
 
 	var sspm_parsed: SSPMUtil.SSPM = SSPMUtil.load_from_path(path)
-	var data: Array =  sspm_parsed.data_parsed
+	var data: Array = sspm_parsed.data_parsed
 
 	new_map.map_type = MapType.SSPM
 	new_map.path = path
@@ -103,7 +103,7 @@ static func from_path_phxm(path: String) -> Map: #path to a .phxm file
 	var new_map: Map = Map.new()
 
 	var phxm_parsed: PHXMParser.PHXM = PHXMParser.load_from_path(path)
-	var data: Array =  phxm_parsed.data_parsed
+	var data: Array = phxm_parsed.data_parsed
 
 	new_map.map_type = MapType.PHXM
 	new_map.path = path
@@ -115,6 +115,6 @@ static func from_path_phxm(path: String) -> Map: #path to a .phxm file
 	new_map.map_name = phxm_parsed.metadata.Title
 	new_map.author_name = phxm_parsed.metadata.Artist
 	new_map.charter_name = ", ".join(phxm_parsed.metadata.Mappers)
-	new_map.override = MapOverride.get_from_path(path)
+	new_map.override = phxm_parsed.override
 
 	return new_map

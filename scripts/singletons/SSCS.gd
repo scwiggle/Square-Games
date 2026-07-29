@@ -401,7 +401,6 @@ func load_map_from_name(map_name: String, ignore_cache: bool = false) -> MapLoad
 	map_cache[map_name] = map
 	map_loaded.emit(map)
 
-
 	return map
 
 func load_unloaded_maps() -> void:
