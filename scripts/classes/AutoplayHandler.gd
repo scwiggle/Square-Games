@@ -39,7 +39,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 
 	var preprocessed_data: Array[Array] = []
 
-	SSCS.debug_print("begin initial preprocessing")
+	SSCS.print_debug("begin initial preprocessing")
 
 	#initial preprocessing
 	while i < notes_len:
@@ -88,13 +88,13 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 
 		var v_prev: Array = notes[i - 2]
 		if v_prev != null and len(collected) == 1 and v[0] == v_prev[0] and v[1] == v_prev[1] and len(preprocessed_data) > 0:
-			SSCS.debug_print("stack old avg")
+			SSCS.print_debug("stack old avg")
 			new_note_data[0] = preprocessed_data[-1][0]
 			new_note_data[1] = preprocessed_data[-1][1]
 
 		preprocessed_data.append(new_note_data)
 
-	SSCS.debug_print("begin aggressive stack compressing")
+	SSCS.print_debug("begin aggressive stack compressing")
 	i = 2
 
 	var preprocessed_data_len: int = len(preprocessed_data)
@@ -190,13 +190,13 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 					if current_valid:
 						valid = true
 						valid_test = test
-						SSCS.debug_print("VALID STACK ATTEMPT WTF!?!?!")
+						SSCS.print_debug("VALID STACK ATTEMPT WTF!?!?!")
 						break
 
 				if valid:
 					secondary_preprocessed_data.append(valid_test)
 				else:
-					SSCS.debug_print("invalid stack attempt")
+					SSCS.print_debug("invalid stack attempt")
 					secondary_preprocessed_data.append(top_note)
 					var top_note_shifted: Array = top_note.duplicate()
 					top_note_shifted[2] += 10
@@ -219,9 +219,9 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 	#shift preprocessing
 	i = 0
 	var secondary_preprocessed_data_len: int = len(secondary_preprocessed_data)
-	SSCS.debug_print(secondary_preprocessed_data_len)
+	SSCS.print_debug(secondary_preprocessed_data_len)
 
-	SSCS.debug_print("begin shift preprocessing")
+	SSCS.print_debug("begin shift preprocessing")
 
 	while i+1<secondary_preprocessed_data_len:
 
@@ -234,7 +234,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 		var shift_vec: Vector2
 
 		if (note_2[0] == note_3[0] and note_2[1] == note_3[1]):
-			SSCS.debug_print("ignore")
+			SSCS.print_debug("ignore")
 			var desired: Vector2 = Vector2(
 				((processed_data[-1] if len(processed_data) > 0 else note_1)[0] + note_2[0] * 0.5 + note_3[0]) / 2.5,
 				((processed_data[-1] if len(processed_data) > 0 else note_1)[1] + note_2[1] * 0.5 + note_3[1]) / 2.5,
@@ -315,10 +315,10 @@ func _get_cursor_position_from_notes_and_elapsed(note_data: Array, elapsed: int)
 			temp_last_loaded_note+=1
 
 	if temp_last_loaded_note == 0:
-		SSCS.debug_print("WOOT WOOT WOOT")
+		SSCS.print_debug("WOOT WOOT WOOT")
 
 	if temp_last_loaded_note + 2 > len(note_data) - 1:
-		SSCS.debug_print("WOOT WOOT WOOT 2")
+		SSCS.print_debug("WOOT WOOT WOOT 2")
 
 	var note_0: Array = note_data[max(temp_last_loaded_note - 1,0)]
 	var note_1: Array = note_data[temp_last_loaded_note]
@@ -345,13 +345,13 @@ func get_cursor_position() -> Vector2:
 
 	#var offset_forward: int = 1
 	#while _check_hit(note_2, note_3, SSCS.modifiers.hitbox_size * 0.5 + 0.01) and last_loaded_note + 2 + offset_forward < len(processed_data):
-		##SSCS.debug_print('forward ', offset_forward)
+		##SSCS.print_debug('forward ', offset_forward)
 		#note_3 = processed_data[min(last_loaded_note + 2 + offset_forward, len(processed_data) - 1)]
 		#offset_forward += 1
 #
 	#var offset_backward: int = 1
 	#while _check_hit(note_1, note_0, 0.5) and last_loaded_note - 1 - offset_backward >= 0:
-		##SSCS.debug_print('backward')
+		##SSCS.print_debug('backward')
 		#note_0 = processed_data[max(last_loaded_note - 1 - offset_backward,0)]
 		#offset_backward += 1
 
