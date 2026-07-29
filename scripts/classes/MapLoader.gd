@@ -19,6 +19,7 @@ class Map:
 	var author_name: String
 	var charter_name: String
 	var cover: Image
+	var override: MapOverride = MapOverride.new()
 
 #DEPRECATED because arrays are better in basically every way
 #class NoteDataMinimal:
@@ -94,6 +95,7 @@ static func from_path_sspm(path: String) -> Map: #path to a .sspm file
 	new_map.cover = sspm_parsed.cover
 	new_map.map_name = sspm_parsed.name
 	new_map.charter_name = sspm_parsed.mapper
+	new_map.override = MapOverride.get_from_path(path)
 
 	return new_map
 
@@ -113,5 +115,6 @@ static func from_path_phxm(path: String) -> Map: #path to a .phxm file
 	new_map.map_name = phxm_parsed.metadata.Title
 	new_map.author_name = phxm_parsed.metadata.Artist
 	new_map.charter_name = ", ".join(phxm_parsed.metadata.Mappers)
+	new_map.override = MapOverride.get_from_path(path)
 
 	return new_map

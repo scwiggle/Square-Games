@@ -445,6 +445,7 @@ func _ready() -> void:
 	DirAccess.make_dir_absolute("user://rhythiamaps")
 	DirAccess.make_dir_absolute("user://phoenyxmaps")
 	DirAccess.make_dir_absolute("user://replays")
+	DirAccess.make_dir_absolute("user://mapoverrides")
 
 	var settings_file: FileAccess = FileAccess.open("user://settings.txt", FileAccess.READ)
 
