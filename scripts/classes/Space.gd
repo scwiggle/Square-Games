@@ -16,9 +16,9 @@ func _init(directory: String) -> void:
 	
 	meta_file.load("%s/meta.ini" % directory_stripped)
 
-	meta.name = meta_file.get_value("Space", "Name")
-	meta.author = meta_file.get_value("Space", "Author")
-	meta.blurb = meta_file.get_value("Space", "Blurb")
+	meta.name = "Default" if meta_file.get_value("Space", "Name") == null else meta_file.get_value("Space", "Name")
+	meta.author = "Default" if meta_file.get_value("Space", "Author") == null else meta_file.get_value("Space", "Author")
+	meta.blurb = "Default" if meta_file.get_value("Space", "Blurb") == null else meta_file.get_value("Space", "Blurb")
 
 	scene_path = "%s/space.tscn" % directory_stripped
 

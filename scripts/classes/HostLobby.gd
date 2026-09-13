@@ -73,7 +73,7 @@ func start_lobby(from: float = 0) -> void:
 
 	NewSteamHandler.send_message_to_users([], ClientLobby.CLIENT_PACKET.MAP_START, start_from_encoded)
 
-	var game_handler: GameHandler = GameHandler.new(selected_map)
+	var game_handler: GameHandler = GameHandler.new()
 
 	game_handler.note_hit.connect(func(note: Note) -> void:
 		local_note_hit_data[note.note_id] = true
@@ -98,6 +98,7 @@ func start_lobby(from: float = 0) -> void:
 	SSCS.game_handler = game_handler
 
 	$"/root/Game".add_child(game_handler)
+	game_handler.initialize(selected_map, false, [], [], true)
 
 	cursor = game_handler.cursor
 
@@ -123,11 +124,12 @@ func spectate_user(user_id: int) -> void:
 	print(user_data[user_id])
 	spectated_user = user_id
 
-	var game_handler: GameHandler = GameHandler.new(selected_map, true, user_data[user_id].note_hit_data, user_data[user_id].cursor_replication_data, false)
-
+	var game_handler: GameHandler = GameHandler.new()
+	
 	SSCS.game_handler = game_handler
 
 	$"/root/Game".add_child(game_handler)
+	game_handler.initialize(selected_map, true, user_data[user_id].note_hit_data, user_data[user_id].cursor_replication_data, false)
 
 	cursor = game_handler.cursor
 

@@ -143,13 +143,15 @@ func _ready() -> void:
 		print("num notes: ", str(len(map.data)))
 		print("map data offset override at %s msec" % map.override.data_offset_msec)
 
-		var game_handler: GameHandler = GameHandler.new(map)
+		var game_handler: GameHandler = GameHandler.new()
+		
 		SSCS.game_handler=game_handler
 
 
 		var game_scene:Node = $"/root/Game"
 
 		game_scene.add_child(game_handler)
+		game_handler.initialize(map, false, [], [], true)
 
 		game_handler.play(start_from_time)
 
@@ -178,13 +180,15 @@ func _ready() -> void:
 
 		print("num notes: ", str(len(map.data)))
 
-		var game_handler: GameHandler = GameHandler.new(map)
+		var game_handler: GameHandler = GameHandler.new()
+		
 		SSCS.game_handler=game_handler
 
 
 		var game_scene:Node = $"/root/Game"
 
 		game_scene.add_child(game_handler)
+		game_handler.initialize(map, false, [], [], true)
 
 		game_handler.play(start_from_time)
 
@@ -242,10 +246,12 @@ func _ready() -> void:
 					SSCS.settings = replay_data.settings
 				SSCS.modifiers = replay_data.modifiers
 
-				var game_handler: GameHandler = GameHandler.new(replay_data.map, true, replay_data.replay_note_hit_data, replay_data.replay_cursor_pos_data, true)
+				var game_handler: GameHandler = GameHandler.new()
+				
 
 				SSCS.game_handler = game_handler
 				$"/root/Game".add_child(game_handler)
+				game_handler.initialize(replay_data.map, true, replay_data.replay_note_hit_data, replay_data.replay_cursor_pos_data, true)
 
 				SSCS.user_interface.visible = false
 				game_handler.play(replay_data.start_from)

@@ -1,5 +1,5 @@
 extends MultiMeshInstance3D
-class_name GameHandler
+#class_name GameHandler
 
 const cursor_base: PackedScene = preload("res://scenes/prefabs/cursor.tscn")
 const note_mesh: ArrayMesh = preload("res://assets/meshes/Rounded.obj")
@@ -14,7 +14,7 @@ const invisible_transform: Transform3D = Transform3D(Basis(Vector3(), Vector3(),
 
 var map: MapLoader.Map
 
-var map_data: Array[Array]
+var map_data: Array[PackedFloat32Array]
 
 var notes: Array[Note] = []
 var note_rendering_array: Array[Note] = []
@@ -102,7 +102,7 @@ func _init(map_arg: MapLoader.Map, is_replay: bool = false, replay_note_hit_data
 	var note_counter: int = 0
 	var current_note: int = 0
 
-	for note: Array in map.data:
+	for note: PackedFloat32Array in map.data:
 		var ct: float = note[2] / speed_multiplier
 
 		while true:
@@ -119,8 +119,8 @@ func _init(map_arg: MapLoader.Map, is_replay: bool = false, replay_note_hit_data
 			max_loaded_notes = current_note - note_counter
 
 	max_loaded_notes += 1
-	#if max_loaded_notes > 10000: #holy shit visual map
-		#max_loaded_notes *= 2
+	if max_loaded_notes > 1000: #holy shit visual map
+		max_loaded_notes *= 2
 
 	var benchmark_end_1: int = Time.get_ticks_usec()
 	print((benchmark_end_1 - benchmark_start_1)/1000.0)
@@ -457,7 +457,6 @@ func _check_hitreg() -> void:
 			
 			if note_t < elapsed:
 				if note_t < boundary:
-					print(note_t)
 					misses += 1
 					health -= 1.0
 					if use_miss_sound: miss_sound_player.play(0)

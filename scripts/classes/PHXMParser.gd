@@ -4,7 +4,7 @@ class_name PHXMParser
 class PHXM:
 	var data_csv: String
 	var audio: AudioStream
-	var data_parsed: Array[Array]
+	var data_parsed: Array[PackedFloat32Array]
 	var metadata: Dictionary
 	var cover: Image
 	var override: MapOverride
@@ -56,7 +56,7 @@ static func load_from_path(path: String) -> PHXM:
 	var _type_count: int = object_data.decode_u32(cursor); cursor += 4
 	var note_count: int = object_data.decode_u32(cursor); cursor += 4
 
-	var note_data: Array[Array]
+	var note_data: Array[PackedFloat32Array]
 
 	for i: int in range(0, note_count):
 		var ms: int = object_data.decode_u32(cursor); cursor += 4
@@ -67,14 +67,14 @@ static func load_from_path(path: String) -> PHXM:
 		if quantum:
 			var x: float = -object_data.decode_float(cursor); cursor += 4
 			var y: float = object_data.decode_float(cursor); cursor += 4
-			note_data.append([x, y, final_ms])
+			note_data.append(PackedFloat32Array([x, y, final_ms]))
 		else:
 			var x: float = 1 - object_data.decode_u8(cursor); cursor += 1
 			var y: float = object_data.decode_u8(cursor) - 1; cursor += 1
-			note_data.append([x, y, final_ms])
+			note_data.append(PackedFloat32Array([x, y, final_ms]))
 
 	note_data.sort_custom(
-		func(a: Array, b: Array) -> bool:
+		func(a: PackedFloat32Array, b: PackedFloat32Array) -> bool:
 			return a[2] < b[2]
 	)
 

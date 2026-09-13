@@ -8,12 +8,12 @@ enum VfxDetailLevel {
 	VFX_DETAIL_LEVEL_MAX
 }
 
-const SPACES_PATH = "res://scenes/spaces"
+const SPACES_PATH = "res://scenes/spaces/"
 
 class Settings:
 	var approach_rate: float = 50.0
 	var spawn_distance: float = 25.0
-	var color_set: Array = [
+	var color_set: Array[Color] = [
 		Color.from_string("#ffffff", Color.WHITE),
 		Color.from_string("#66ffff", Color.WHITE),
 	]
@@ -78,7 +78,7 @@ class Settings:
 	var sound_space_accurate_camera: bool = false
 
 class Modifiers:
-	var hit_time: float = 45.0
+	var hit_time: float = 55.0
 	var hitbox_size: float = (0.875 + 0.2625)/2
 	var speed: float = 1
 	var no_fail: bool = false
@@ -129,7 +129,7 @@ var modifier_parse_overrides: Dictionary[String,Callable] = {
 		return colorset
 }
 
-static func print_debug(to_print: Variant) -> void:
+func print_debug(to_print: Variant) -> void:
 	if SSCS.is_debugging: print(str(to_print))
 
 func set_setting(setting: String, value: Variant, generic: bool = false) -> bool:

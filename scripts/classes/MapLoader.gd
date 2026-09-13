@@ -11,7 +11,7 @@ class Map:
 	var map_type: MapType
 	var path: String
 	var raw_data: String
-	var data: Array[Array]
+	var data: Array[PackedFloat32Array]
 	var audio: AudioStream
 	var loaded_successfully: bool
 	var raw_map_name: String
@@ -32,8 +32,8 @@ class Map:
 		#y = y_arg
 		#t = t_arg
 
-static func _parse_data(data: String, offset: bool = true) -> Array[Array]:
-	var output_data: Array[Array] = []
+static func _parse_data(data: String, offset: bool = true) -> Array[PackedFloat32Array]:
+	var output_data: Array[PackedFloat32Array] = []
 
 	if offset:
 		for v: String in data.split(","):
@@ -42,7 +42,7 @@ static func _parse_data(data: String, offset: bool = true) -> Array[Array]:
 				var new_note_data: Array = [
 					1.0 - split[0].to_float(),
 					1.0 - split[1].to_float(),
-					split[2].to_int()
+					split[2].to_float()
 				]
 
 				output_data.append(new_note_data)
@@ -50,10 +50,10 @@ static func _parse_data(data: String, offset: bool = true) -> Array[Array]:
 		for v: String in data.split(","):
 			var split: PackedStringArray = v.split("|")
 			if len(split) == 3:
-				var new_note_data: Array = [
+				var new_note_data: PackedFloat32Array = [
 					split[0].to_float(),
 					split[1].to_float(),
-					split[2].to_int()
+					split[2].to_float()
 				]
 
 				output_data.append(new_note_data)
@@ -69,7 +69,7 @@ static func from_path_native(path: String) -> Map: #path to a folder with a data
 	audio.data = FileAccess.get_file_as_bytes("%s/audio.mp3" % path)
 
 	var raw_data: String = FileAccess.get_file_as_string("%s/data.txt" % path)
-	var data: Array =  _parse_data(raw_data)
+	var data: PackedFloat32Array =  _parse_data(raw_data)
 
 	new_map.map_type = MapType.Native
 	new_map.path = path

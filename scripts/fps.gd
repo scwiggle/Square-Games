@@ -1,7 +1,7 @@
 extends RichTextLabel
 
-func _process(dt:float ) -> void:
-	self.text = str(1/dt)
+func _process(dt: float) -> void:
+	self.text = str(1 / dt) + "\n" + str(Engine.get_frames_per_second())
 
 func teststuff(a:int=0,b:int=0,c:int=0,d:int=0) -> int:
 	var e: int = a+b*c+d

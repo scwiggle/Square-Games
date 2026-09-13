@@ -3,7 +3,7 @@ class_name AutoplayHandler
 
 var map: MapLoader.Map
 
-var processed_data: Array[Array] = []
+var processed_data: Array[PackedFloat32Array] = []
 
 const max_shift_multi: float = 0.25
 
@@ -31,25 +31,25 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 
 	var timing_start: int = Time.get_ticks_usec()
 
-	var notes: Array[Array] = map.data.duplicate(true)
+	var notes: Array[PackedFloat32Array] = map.data.duplicate(true)
 	var notes_len: int = len(notes)
 
-	for note: Array in notes:
+	for note: PackedFloat32Array in notes:
 		note[2] /= SSCS.modifiers.speed
 
-	var preprocessed_data: Array[Array] = []
+	var preprocessed_data: Array[PackedFloat32Array] = []
 
 	SSCS.print_debug("begin initial preprocessing")
 
 	#initial preprocessing
 	while i < notes_len:
-		var v: Array = notes[i]
+		var v: PackedFloat32Array = notes[i]
 		i += 1
 
-		var collected: Array[Array] = [v]
+		var collected: Array[PackedFloat32Array] = [v]
 
 		while i < notes_len:
-			var v2: Array = notes[i]
+			var v2: PackedFloat32Array = notes[i]
 			if v2 and abs(v2[2] - v[2]) <= 5 and _check_hit(v, v2, SSCS.modifiers.hitbox_size * 0.9):
 				collected.append(v2)
 				i += 1
@@ -58,12 +58,12 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 
 		var avg_pos: Vector2 = Vector2()
 
-		for note: Array in collected:
+		for note: PackedFloat32Array in collected:
 			avg_pos += Vector2(note[0], note[1])
 		avg_pos /= len(collected)
 
 		if i > 1:
-			var prev_data: Array = preprocessed_data[-1]
+			var prev_data: PackedFloat32Array = preprocessed_data[-1]
 			var prev_data_pos: Vector2 = Vector2(prev_data[0], prev_data[1])
 
 			var time_elapsed: float = abs(prev_data[2] - v[2]) / 1000.0
@@ -72,7 +72,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 			avg_pos *= 0.8 + (sigmoid(speed * 5) - 0.5) * 2 * 0.2
 
 			if i > 2 and len(preprocessed_data) >= 2:
-				var prev_prev_data: Array = preprocessed_data[-2]
+				var prev_prev_data: PackedFloat32Array = preprocessed_data[-2]
 				var prev_prev_data_pos: Vector2 = Vector2(prev_prev_data[0], prev_prev_data[1])
 
 				var dir_1: Vector2 = (prev_data_pos - prev_prev_data_pos).normalized()
@@ -80,13 +80,13 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 
 				avg_pos *= 1 + (max(-dir_1.dot(dir_2) - 0.5, 0) * (1 / (time_elapsed * 20 + 1)))
 
-		var new_note_data: Array = [
+		var new_note_data: PackedFloat32Array = [
 			avg_pos.x,
 			avg_pos.y,
 			v[2]
 		]
 
-		var v_prev: Array = notes[i - 2]
+		var v_prev: PackedFloat32Array = notes[i - 2]
 		if v_prev != null and len(collected) == 1 and v[0] == v_prev[0] and v[1] == v_prev[1] and len(preprocessed_data) > 0:
 			SSCS.print_debug("stack old avg")
 			new_note_data[0] = preprocessed_data[-1][0]
@@ -99,7 +99,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 
 	var preprocessed_data_len: int = len(preprocessed_data)
 
-	var secondary_preprocessed_data: Array[Array] = []
+	var secondary_preprocessed_data: Array[PackedFloat32Array] = []
 
 	if preprocessed_data_len > 5 and true:
 
@@ -111,13 +111,13 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 
 			var stack_length: int = 1
 
-			var top_note: Array = preprocessed_data[i]
+			var top_note: PackedFloat32Array = preprocessed_data[i]
 			var top_note_i: int = i
 			i += 1
 			#secondary_preprocessed_data.append(top_note)
 
 			while i + 2 < preprocessed_data_len:
-				var next_note: Array = preprocessed_data[i]
+				var next_note: PackedFloat32Array = preprocessed_data[i]
 				i += 1
 				if _check_hit(next_note, top_note, 0.1):
 					stack_length += 1
@@ -129,35 +129,35 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 				if top_note[2] > 275000: print("stack found ", top_note[2])
 				if top_note[2] > 275000: print(stack_length)
 
-				var end_note: Array = preprocessed_data[i-1]
+				var end_note: PackedFloat32Array = preprocessed_data[i-1]
 
 				var valid: bool = false
-				var valid_test: Array
+				var valid_test: PackedFloat32Array
 
-				var tests: Array[Array] = []
+				var tests: Array[PackedFloat32Array] = []
 
 				var test_width: float = SSCS.modifiers.hitbox_size * 0.5
 				const test_width_fidelity: int = 3
 				const test_count: int = 11
 				for i2: int in range(0, test_count):
-					tests.append([
+					tests.append(PackedFloat32Array([
 						top_note[0],
 						top_note[1],
 						lerp(top_note[2], end_note[2], i2 / (test_count - 1.0)),
-					])
+					]))
 					for x: int in range(-test_width_fidelity, test_width_fidelity+1):
 						for y: int in range(-test_width_fidelity, test_width_fidelity+1):
 							if y == 0 and x == 0: continue
 							var offset: Vector2 = (Vector2(x,y) / float(test_width_fidelity)) * test_width
-							tests.append([
+							tests.append(PackedFloat32Array([
 								top_note[0] + offset.x,
 								top_note[1] + offset.y,
 								lerp(top_note[2], end_note[2], i2 / (test_count - 1.0)),
-							])
+							]))
 
 				var top_note_pos: Vector2 = Vector2(top_note[0], top_note[1])
 
-				tests.sort_custom(func(a: Array, b: Array) -> bool:
+				tests.sort_custom(func(a: PackedFloat32Array, b: PackedFloat32Array) -> bool:
 					return a[2] < b[2] or Vector2(a[0], a[1]).distance_squared_to(top_note_pos) < Vector2(b[0], b[1]).distance_squared_to(top_note_pos)
 				)
 
@@ -166,18 +166,18 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 				#while check_length <= i and preprocessed_data[i - check_length][2] > secondary_preprocessed_data[-4][2]:
 					#check_length += 1
 
-				var notes_to_check: Array[Array] = preprocessed_data.slice(max(0, top_note_i - 6), i + 6)
+				var notes_to_check: Array[PackedFloat32Array] = preprocessed_data.slice(max(0, top_note_i - 6), i + 6)
 
-				var cursor_position_notes: Array[Array] = secondary_preprocessed_data.slice(-stack_length - 12)
-				var cursor_position_notes_end: Array[Array] = preprocessed_data.slice(i, i + 12)
+				var cursor_position_notes: Array[PackedFloat32Array] = secondary_preprocessed_data.slice(-stack_length - 12)
+				var cursor_position_notes_end: Array[PackedFloat32Array] = preprocessed_data.slice(i, i + 12)
 
 				if top_note[2] > 275000: print(len(notes_to_check))
 
-				for test: Array in tests:
+				for test: PackedFloat32Array in tests:
 					var current_valid: bool = true
 					var test_validation_array: Array = cursor_position_notes + [test] + cursor_position_notes_end
 
-					for note: Array in notes_to_check:
+					for note: PackedFloat32Array in notes_to_check:
 						var any_valid: bool = false
 						for offset_test: int in range(0, 10):
 							var offset_check: float = lerpf(5, SSCS.modifiers.hit_time * 0.8, 1 - (offset_test / 9.0))
@@ -198,11 +198,11 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 				else:
 					SSCS.print_debug("invalid stack attempt")
 					secondary_preprocessed_data.append(top_note)
-					var top_note_shifted: Array = top_note.duplicate()
+					var top_note_shifted: PackedFloat32Array = top_note.duplicate()
 					top_note_shifted[2] += 10
 					secondary_preprocessed_data.append(top_note_shifted)
 
-					var end_note_shifted: Array = end_note.duplicate()
+					var end_note_shifted: PackedFloat32Array = end_note.duplicate()
 					end_note_shifted[2] -= 10
 					secondary_preprocessed_data.append(end_note_shifted)
 					secondary_preprocessed_data.append(end_note)
@@ -225,11 +225,11 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 
 	while i+1<secondary_preprocessed_data_len:
 
-		var note_0: Array = secondary_preprocessed_data[max(i-2,0)]
-		var note_1: Array = secondary_preprocessed_data[max(i-1,0)]
-		var note_2: Array = secondary_preprocessed_data[i]
-		var note_3: Array = secondary_preprocessed_data[i+1]
-		var note_4: Array = secondary_preprocessed_data[min(i+2,secondary_preprocessed_data_len-1)]
+		var note_0: PackedFloat32Array = secondary_preprocessed_data[max(i-2,0)]
+		var note_1: PackedFloat32Array = secondary_preprocessed_data[max(i-1,0)]
+		var note_2: PackedFloat32Array = secondary_preprocessed_data[i]
+		var note_3: PackedFloat32Array = secondary_preprocessed_data[i+1]
+		var note_4: PackedFloat32Array = secondary_preprocessed_data[min(i+2,secondary_preprocessed_data_len-1)]
 
 		var shift_vec: Vector2
 
@@ -272,14 +272,14 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 		var valid: bool = false
 		for i2: int in range(0,1):
 			var shift_multi: float = (10 - i2) / 10.0
-			var new_note: Array = [
+			var new_note: PackedFloat32Array = [
 				note_2[0] + shift_vec.x * shift_multi,
 				note_2[1] + shift_vec.y * shift_multi,
 				note_2[2]
 			]
 			var test_validation_array: Array = processed_data.slice(-3) + [new_note] + secondary_preprocessed_data.slice(i+1, i+4)
 			var current_valid: bool = true
-			for note: Array in map.data:
+			for note: PackedFloat32Array in map.data:
 				if note[2] >= test_validation_array[2][2] and note[2] <= test_validation_array[-3][2]:
 					if !(_check_hit(note, _get_cursor_position_from_notes_and_elapsed(test_validation_array, note[2]+1), SSCS.modifiers.hitbox_size * 0.9) or _check_hit(note, _get_cursor_position_from_notes_and_elapsed(test_validation_array, note[2]+5), SSCS.modifiers.hitbox_size * 0.9)):
 						current_valid = false
@@ -308,7 +308,7 @@ func _init(map_arg: MapLoader.Map, cursor_arg: Cursor) -> void:
 func _get_cursor_position_from_notes_and_elapsed(note_data: Array, elapsed: int) -> Vector2:
 	var temp_last_loaded_note: int = 0
 	while temp_last_loaded_note + 1<len(note_data):
-		var note: Array = note_data[temp_last_loaded_note+1]
+		var note: PackedFloat32Array = note_data[temp_last_loaded_note+1]
 		if note[2] > elapsed:
 			break
 		else:
@@ -320,10 +320,10 @@ func _get_cursor_position_from_notes_and_elapsed(note_data: Array, elapsed: int)
 	if temp_last_loaded_note + 2 > len(note_data) - 1:
 		SSCS.print_debug("WOOT WOOT WOOT 2")
 
-	var note_0: Array = note_data[max(temp_last_loaded_note - 1,0)]
-	var note_1: Array = note_data[temp_last_loaded_note]
-	var note_2: Array = note_data[min(temp_last_loaded_note + 1, len(note_data) - 1)]
-	var note_3: Array = note_data[min(temp_last_loaded_note + 2, len(note_data) - 1)]
+	var note_0: PackedFloat32Array = note_data[max(temp_last_loaded_note - 1,0)]
+	var note_1: PackedFloat32Array = note_data[temp_last_loaded_note]
+	var note_2: PackedFloat32Array = note_data[min(temp_last_loaded_note + 1, len(note_data) - 1)]
+	var note_3: PackedFloat32Array = note_data[min(temp_last_loaded_note + 2, len(note_data) - 1)]
 
 	var return_pos: Vector2 = SplineManager._get_position(note_0, note_1, note_2, note_3, elapsed).clampf(-cursor.GRID_MAX,cursor.GRID_MAX)
 
@@ -338,10 +338,10 @@ func get_cursor_position() -> Vector2:
 		else:
 			last_loaded_note+=1
 
-	var note_0: Array = processed_data[max(last_loaded_note - 1,0)]
-	var note_1: Array = processed_data[last_loaded_note]
-	var note_2: Array = processed_data[min(last_loaded_note + 1, len(processed_data) - 1)]
-	var note_3: Array = processed_data[min(last_loaded_note + 2, len(processed_data) - 1)]
+	var note_0: PackedFloat32Array = processed_data[max(last_loaded_note - 1,0)]
+	var note_1: PackedFloat32Array = processed_data[last_loaded_note]
+	var note_2: PackedFloat32Array = processed_data[min(last_loaded_note + 1, len(processed_data) - 1)]
+	var note_3: PackedFloat32Array = processed_data[min(last_loaded_note + 2, len(processed_data) - 1)]
 
 	#var offset_forward: int = 1
 	#while _check_hit(note_2, note_3, SSCS.modifiers.hitbox_size * 0.5 + 0.01) and last_loaded_note + 2 + offset_forward < len(processed_data):

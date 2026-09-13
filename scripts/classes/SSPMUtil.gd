@@ -22,7 +22,7 @@ class SSPM:
 	var name: String
 	var mapper: String
 	var difficulty: String
-	var data_parsed: Array[Array]
+	var data_parsed: Array[PackedFloat32Array]
 	var override: MapOverride
 
 static var total_load: float = 0
@@ -108,7 +108,7 @@ static func load_from_path(path: String) -> SSPM:
 	#else:
 	newdata.name=mapname
 
-	var benchmarking_start_3: int = Time.get_ticks_usec()
+	#var benchmarking_start_3: int = Time.get_ticks_usec()
 
 	if hasAudio:
 		file.seek(audioOffset)
@@ -149,14 +149,14 @@ static func load_from_path(path: String) -> SSPM:
 	
 	newdata.override = MapOverride.get_from_path(path)
 
-	var benchmarking_end_3: int = Time.get_ticks_usec()
+	#var benchmarking_end_3: int = Time.get_ticks_usec()
 	#only reason we go to marker definitions is for ssp_note
 
 	file.seek(markersOffset)
 
-	var benchmarking_start_1: int = Time.get_ticks_usec()
+	#var benchmarking_start_1: int = Time.get_ticks_usec()
 
-	var note_data: Array[Array]
+	var note_data: Array[PackedFloat32Array]
 	note_data.resize(noteCount)
 
 	for i: int in range(noteCount):
@@ -174,11 +174,11 @@ static func load_from_path(path: String) -> SSPM:
 				#ms
 			#]
 
-			note_data[i] = [
+			note_data[i] = PackedFloat32Array([
 				1.0 - file.get_8(),
 				1.0 - file.get_8(),
 				final_ms
-			]
+			])
 		else:
 			#var new_note_data: Array = [
 				#1.0 - file.get_float(),
@@ -186,19 +186,19 @@ static func load_from_path(path: String) -> SSPM:
 				#ms
 			#]
 
-			note_data[i] = [
+			note_data[i] = PackedFloat32Array([
 				1.0 - file.get_float(),
 				1.0 - file.get_float(),
 				final_ms
-			]
+			])
 
-	var benchmarking_end_1: int = Time.get_ticks_usec()
-	var benchmarking_start_2: int = Time.get_ticks_usec()
+	#var benchmarking_end_1: int = Time.get_ticks_usec()
+	#var benchmarking_start_2: int = Time.get_ticks_usec()
 
 	var sorting_dict: Dictionary[int, Array]
 	var note_mses: PackedInt64Array
 
-	for note: Array in note_data:
+	for note: PackedFloat32Array in note_data:
 		var note_t: int = note[2]
 		if sorting_dict.has(note_t):
 			sorting_dict[note_t].append(note)
@@ -210,11 +210,11 @@ static func load_from_path(path: String) -> SSPM:
 
 	var i: int = 0
 	for ms: int in note_mses:
-		for note: Array in sorting_dict[ms]:
+		for note: PackedFloat32Array in sorting_dict[ms]:
 			note_data[i] = note
 			i += 1
 
-	var benchmarking_end_2: int = Time.get_ticks_usec()
+	#var benchmarking_end_2: int = Time.get_ticks_usec()
 
 	newdata.data_parsed=note_data
 
