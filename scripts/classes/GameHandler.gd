@@ -273,7 +273,7 @@ func remove_note(note: Note) -> void:
 	
 	#note_rendering_array[note_rendering_array_size].deinitialize()
 	
-	#print("remove")
+	#print("remove")8
 	#print(note_rendering_array)
 	#print(note_rendering_array_size)
 

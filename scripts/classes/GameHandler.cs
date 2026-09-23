@@ -27,10 +27,11 @@ public partial class GameHandler : MultiMeshInstance3D {
 		public int multimesh_index;
 		public int chart_index;
 		public bool dead;
+		public Transform3D transform;
 
 		readonly float grid_distance;
 		readonly MultiMesh multimesh;
-		readonly Basis scale;
+		readonly Vector3 scale;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 		public void initialize(Vector2 pos, float time, Color color, int multimesh_index, int chart_index) {
@@ -41,20 +42,19 @@ public partial class GameHandler : MultiMeshInstance3D {
 			this.color = color;
 
 			dead = false;
+			
+			transform = new Transform3D(pos.X, pos.Y, time, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, 1, 1, 1);
+			// transform = new Transform3D(pos.X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-			multimesh.SetInstanceTransform(multimesh_index, new Transform3D(scale, new Vector3(pos.X, pos.Y, grid_distance)));
-			// multimesh.SetInstanceCustomData(multimesh_index, new Color(color, time));
+			multimesh.SetInstanceTransform(multimesh_index, transform);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 		public void reinitialize() {
-			dead = false;
-
-			multimesh.SetInstanceTransform(multimesh_index, new Transform3D(scale, new Vector3(pos.X, pos.Y, grid_distance)));
-			// multimesh.SetInstanceCustomData(multimesh_index, new Color(color, time));
+			multimesh.SetInstanceTransform(multimesh_index, transform);
 		}
 
-		public Note(MultiMesh multimesh, float grid_distance, Basis scale) {
+		public Note(MultiMesh multimesh, float grid_distance, Vector3 scale) {
 			this.grid_distance = grid_distance;
 			this.multimesh = multimesh;
 			this.scale = scale;
@@ -70,25 +70,6 @@ public partial class GameHandler : MultiMeshInstance3D {
 			this.y = y;
 			this.t = t;
 		}
-	}
-
-	private struct MultimeshData {
-		float transformxx;
-		float transformxy;
-		float transformxz;
-
-		float transformyx;
-		float transformyy;
-		float transformyz;
-
-		float transformzx;
-		float transformzy;
-		float transformzz;
-
-		float customr;
-		float customg;
-		float customb;
-		float customa;
 	}
 
 	static readonly GDScript AutoplayHandler = GD.Load<GDScript>("res://scripts/classes/AutoplayHandler.gd");
@@ -174,7 +155,7 @@ public partial class GameHandler : MultiMeshInstance3D {
 
 	private bool end_replay_on_end_of_data;
 
-	private Basis note_basis;
+	private Vector3 note_basis;
 
 	private Node audio_manager;
 	private float start_from;
@@ -193,6 +174,8 @@ public partial class GameHandler : MultiMeshInstance3D {
 		this.map = map;
 		this.is_replay = is_replay;
 		this.end_replay_on_end_of_data = end_replay_on_end_of_data;
+
+		this.Transform = Transform3D.Identity;
 
 		if (is_replay) {
 			this.replay_note_hit_data = replay_note_hit_data;
@@ -279,20 +262,18 @@ public partial class GameHandler : MultiMeshInstance3D {
 
 		Aabb mesh_aabb = mesh.GetAabb();
 
-		note_basis = Basis.FromScale(mesh_aabb.Size.Inverse() * new Vector3(1, 1, 0.2f) * note_scale);
+		note_basis = mesh_aabb.Size.Inverse() * new Vector3(1, 1, 0.2f) * note_scale;
 
 		Multimesh.TransformFormat = MultiMesh.TransformFormatEnum.Transform3D;
-		Multimesh.UseCustomData = true;
+		Multimesh.UseCustomData = false;
+		Multimesh.UseColors = false;
 		
 		Multimesh.CustomAabb = new Aabb(new Vector3(0, 0, 0), new Vector3(1000, 1000, 1000));
-
-		GD.Print(1 / note_basis.Scale.Z);
-
-		RenderingServer.GlobalShaderParameterSet("note_z_multiplier", 1 / note_basis.Scale.Z);
 
 		RenderingServer.GlobalShaderParameterSet("approach_time", approach_time);
 		RenderingServer.GlobalShaderParameterSet("spawn_distance", settings.Get("spawn_distance"));
 		RenderingServer.GlobalShaderParameterSet("vanish_distance", settings.Get("vanish_distance"));
+		RenderingServer.GlobalShaderParameterSet("grid_distance", grid_distance); 
 
 		RenderingServer.GlobalShaderParameterSet("note_begin_transparency", settings.Get("note_begin_transparency"));
 		RenderingServer.GlobalShaderParameterSet("note_transparency", settings.Get("note_transparency"));
@@ -621,6 +602,16 @@ public partial class GameHandler : MultiMeshInstance3D {
 		health = Math.Clamp(health, 0, 5);
 
 		while (notes_head != notes_tail && notes[notes_head].dead) notes_head = (notes_head + 1) % max_loaded_notes;
+	}
+
+	public override void _Input(InputEvent @event) {
+		if (@event.IsActionPressed("pause") && !settings.Get("disable_pausing").AsBool()) {
+			if (playing) {
+				pause();
+			} else {
+				unpause();
+			}
+		}
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveOptimization)]

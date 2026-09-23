@@ -278,7 +278,7 @@ note_fade_out_end={
 "type": "float",
 "value": 0.0
 }
-note_z_multiplier={
+grid_distance={
 "type": "float",
 "value": 0.0
 }

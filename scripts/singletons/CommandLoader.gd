@@ -391,3 +391,17 @@ func _ready() -> void:
 	register_command(Command.new(func() -> void:
 		SSCS.load_unloaded_maps()
 	,["loadunloadedmaps"]))
+	
+	register_command(Command.new(func(mapname: String) -> void:
+		var map: MapLoader.Map = SSCS.load_map_from_name(SSCS.get_full_map_name_from_partial_name(mapname))
+		
+		var array: PackedFloat32Array = []
+		
+		for v in map.data:
+			v[2] /= 1000.0
+			array.append_array(v)
+		
+		var file: FileAccess = FileAccess.open("user://data", FileAccess.WRITE)
+		file.store_buffer(array.to_byte_array())
+		
+	,["exportitus"]))
