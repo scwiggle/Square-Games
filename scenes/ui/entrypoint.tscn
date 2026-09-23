@@ -1,0 +1,55 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwiruopkng1dh"]
+
+[ext_resource type="Script" uid="uid://dtc1g1u14dvy6" path="res://scripts/classes/OffsetContainer.gd" id="1_aco2b"]
+
+[node name="Entrypoint" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="OffsetContainer" type="Control" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_aco2b")
+metadata/_custom_type_script = "uid://dtc1g1u14dvy6"
+
+[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/OffsetContainer"]
+top_level = true
+layout_mode = 0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 634.0
+offset_bottom = 708.0
+
+[node name="OffsetContainer2" type="Control" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_aco2b")
+metadata/_custom_type_script = "uid://dtc1g1u14dvy6"
+
+[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/OffsetContainer2"]
+top_level = true
+layout_mode = 0
+offset_left = 646.0
+offset_top = 12.0
+offset_right = 1268.0
+offset_bottom = 708.0
