@@ -31,23 +31,21 @@ layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("1_aco2b")
 
-[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/OffsetContainer"]
-top_level = true
-layout_mode = 0
-offset_left = 12.0
-offset_top = 12.0
-offset_right = 634.0
-offset_bottom = 708.0
+[node name="_OffsetProxy" type="Node2D" parent="MarginContainer/HBoxContainer/OffsetContainer"]
+metadata/_is_offset_proxy = true
+
+[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/OffsetContainer/_OffsetProxy"]
+offset_right = 622.0
+offset_bottom = 696.0
 
 [node name="OffsetContainer2" type="Control" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("1_aco2b")
 
-[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/OffsetContainer2"]
-top_level = true
-layout_mode = 0
-offset_left = 646.0
-offset_top = 12.0
-offset_right = 1268.0
-offset_bottom = 708.0
+[node name="_OffsetProxy" type="Node2D" parent="MarginContainer/HBoxContainer/OffsetContainer2"]
+metadata/_is_offset_proxy = true
+
+[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer/OffsetContainer2/_OffsetProxy"]
+offset_right = 622.0
+offset_bottom = 696.0
