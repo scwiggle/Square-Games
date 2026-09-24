@@ -27,7 +27,7 @@ class_name OffsetContainer
 
 var target_child: Control
 
-func update_target() -> bool:
+func _update_target() -> bool:
 	if not self.get_child_count() > 0:
 		target_child = null
 		return false
@@ -46,13 +46,20 @@ func clear_offsets() -> void:
 	pivot_offset_offset = Vector2.ZERO
 
 func _ready() -> void:
-	update_target()
+	_update_target()
 
-	self.child_entered_tree.connect(func(_node: Node) -> void: update_target())
-	self.child_exiting_tree.connect(func(_node: Node) -> void: update_target())
+	self.child_entered_tree.connect(func(_node: Node) -> void: _update_target())
+	self.child_exiting_tree.connect(func(_node: Node) -> void: _update_target())
+
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_DRAW: return
+	_update_render()
 
 func _update_render() -> void:
+	print("dateup rdner")
 	if not target_child: return
+	
+	print("update reder")
 
 	target_child.global_position = self.global_position + position_offset
 	target_child.size = self.size + size_offset
